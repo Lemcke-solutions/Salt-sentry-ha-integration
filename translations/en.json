@@ -1,0 +1,25 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Salt Sentry Setup",
+        "description": "Configure your Salt Sentry device.",
+        "data": {
+          "host": "IP address of your Salt Sentry device",
+          "unit": "Unit for measurements (cm or inch)",
+          "full_distance": "Distance from sensor to the salt surface immediately after refilling the container",
+          "empty_distance": "Distance from sensor to the salt surface when the container is nearly empty",
+          "scan_interval": "Polling interval in minutes (default 1)"
+        }
+      }
+    },
+    "error": {
+      "error_full_gt_empty": "Full distance must be smaller than empty distance"
+    }
+  },
+  "options": {
+    "error": {
+      "error_full_gt_empty": "Full distance must be smaller than empty distance"
+    }
+  }
+}

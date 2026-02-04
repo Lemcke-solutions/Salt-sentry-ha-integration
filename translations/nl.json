@@ -1,0 +1,25 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Salt Sentry Installatie",
+        "description": "Configureer je Salt Sentry apparaat.",
+        "data": {
+          "host": "IP-adres van je Salt Sentry",
+          "unit": "Eenheid voor de metingen (cm of inch)",
+          "full_distance": "Afstand van de sensor tot het zoutoppervlak direct na het bijvullen van de bak",
+          "empty_distance": "Afstand van de sensor tot het zoutoppervlak wanneer de bak bijna leeg is",
+          "scan_interval": "Poll-interval in minuten (standaard 1)"
+        }
+      }
+    },
+    "error": {
+      "error_full_gt_empty": "De afstand bij vol moet kleiner zijn dan de afstand bij leeg"
+    }
+  },
+  "options": {
+    "error": {
+      "error_full_gt_empty": "De afstand bij vol moet kleiner zijn dan de afstand bij leeg"
+    }
+  }
+}

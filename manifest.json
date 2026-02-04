@@ -1,0 +1,11 @@
+{
+  "domain": "salt_sentry",
+  "name": "Salt Sentry",
+  "version": "0.1.0",
+  "documentation": "https://yourdomain.com",
+  "requirements": [],
+  "codeowners": ["@erik"],
+  "config_flow": true,
+  "iot_class": "local_polling",
+  "translations": ["en.json", "nl.json"]
+}
