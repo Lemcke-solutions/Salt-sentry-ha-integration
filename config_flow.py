@@ -13,22 +13,21 @@ class SaltSentryConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         host = discovery_info.host
         device_id = discovery_info.properties.get("id")
 
-        # Uniek ID instellen zodat duplicate entries worden voorkomen
         await self.async_set_unique_id(device_id)
-        self._abort_if_unique_id_configured()
+        self._abort_if_unique_id_configured(updates={CONF_HOST: host})  # ← update IP als het al bestaat
 
-        # Stuur host als startwaarde door naar user step
-        user_input = {CONF_HOST: host}
+        # Sla host op in context zodat async_step_user hem kan gebruiken
+        self.context["title_placeholders"] = {"host": host}
+        self._host = host  # ← bewaar als instance variabele
 
-        # direct door naar user step met ingevuld host
-        return await self.async_step_user(user_input)
+        return await self.async_step_user()  # ← roep ZONDER user_input aan
 
     async def async_step_user(self, user_input=None):
         """Handle the manual/user step."""
         errors = {}
-        host = user_input.get(CONF_HOST) if user_input else ""
+        # Gebruik host uit instance var (zeroconf) of uit user_input, of leeg
+        host = (user_input.get(CONF_HOST) if user_input else None) or getattr(self, "_host", "")
 
-        # Validatie van full en empty
         if user_input is not None and CONF_FULL in user_input and CONF_EMPTY in user_input:
             full = float(user_input[CONF_FULL])
             empty = float(user_input[CONF_EMPTY])
