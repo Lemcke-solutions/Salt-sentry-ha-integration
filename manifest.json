@@ -4,14 +4,19 @@
   "version": "0.1.0",
   "documentation": "https://yourdomain.com",
   "requirements": [],
-  "codeowners": ["@erik"],
+  "codeowners": [
+    "@erik"
+  ],
   "config_flow": true,
   "iot_class": "local_polling",
-  "translations": ["en.json", "nl.json"],
+  "translations": [
+    "en.json",
+    "nl.json"
+  ],
   "zeroconf": [
-  {
-    "type": "_salt_sentry._tcp.local.",
-    "name": "saltsentry-*"
-  }
-]
+    {
+      "type": "_salt_sentry._tcp.local.",
+      "name": "saltsentry-*"
+    }
+  ]
 }

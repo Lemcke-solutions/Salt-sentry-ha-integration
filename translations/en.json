@@ -3,13 +3,13 @@
     "step": {
       "user": {
         "title": "Salt Sentry Setup",
-        "description": "Configure your Salt Sentry device.",
+        "description": "Configure your Salt Sentry. Enter the distances the sensor measures from above: a small distance means a lot of salt, a large distance means little salt.",
         "data": {
-          "host": "IP address of your Salt Sentry device",
-          "unit": "Unit for measurements (cm or inch)",
-          "full_distance": "Distance from sensor to the salt surface immediately after refilling the container",
-          "empty_distance": "Distance from sensor to the salt surface when the container is nearly empty",
-          "scan_interval": "Polling interval in minutes (default 1)"
+          "host": "IP address",
+          "unit": "Unit of measurement",
+          "full_distance": "Distance when full (cm)",
+          "empty_distance": "Distance when empty (cm)",
+          "scan_interval": "Polling interval (minutes)"
         }
       }
     },
@@ -18,6 +18,18 @@
     }
   },
   "options": {
+    "step": {
+      "init": {
+        "title": "Salt Sentry Options",
+        "description": "Enter the distances the sensor measures from above: a small distance means a lot of salt, a large distance means little salt.",
+        "data": {
+          "unit": "Unit of measurement",
+          "full_distance": "Distance when full (cm)",
+          "empty_distance": "Distance when empty (cm)",
+          "scan_interval": "Polling interval (minutes)"
+        }
+      }
+    },
     "error": {
       "error_full_gt_empty": "Full distance must be smaller than empty distance"
     }

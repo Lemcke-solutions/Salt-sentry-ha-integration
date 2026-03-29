@@ -3,13 +3,13 @@
     "step": {
       "user": {
         "title": "Salt Sentry Installatie",
-        "description": "Configureer je Salt Sentry apparaat.",
+        "description": "Configureer je Salt Sentry. Vul de afstanden in die de sensor van bovenaf meet: een kleine afstand betekent veel zout, een grote afstand betekent weinig zout.",
         "data": {
-          "host": "IP-adres van je Salt Sentry",
-          "unit": "Eenheid voor de metingen (cm of inch)",
-          "full_distance": "Afstand van de sensor tot het zoutoppervlak direct na het bijvullen van de bak",
-          "empty_distance": "Afstand van de sensor tot het zoutoppervlak wanneer de bak bijna leeg is",
-          "scan_interval": "Poll-interval in minuten (standaard 1)"
+          "host": "IP-adres",
+          "unit": "Eenheid voor de metingen",
+          "full_distance": "Afstand bij vol (cm)",
+          "empty_distance": "Afstand bij leeg (cm)",
+          "scan_interval": "Poll-interval (minuten)"
         }
       }
     },
@@ -18,6 +18,18 @@
     }
   },
   "options": {
+    "step": {
+      "init": {
+        "title": "Salt Sentry Instellingen",
+        "description": "Vul de afstanden in die de sensor van bovenaf meet: een kleine afstand betekent veel zout, een grote afstand betekent weinig zout.",
+        "data": {
+          "unit": "Eenheid voor de metingen",
+          "full_distance": "Afstand bij vol (cm)",
+          "empty_distance": "Afstand bij leeg (cm)",
+          "scan_interval": "Poll-interval (minuten)"
+        }
+      }
+    },
     "error": {
       "error_full_gt_empty": "De afstand bij vol moet kleiner zijn dan de afstand bij leeg"
     }
