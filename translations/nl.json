@@ -1,14 +1,18 @@
 {
   "config": {
     "step": {
+      "zeroconf_confirm": {
+        "title": "Salt Sentry gevonden",
+        "description": "{name} Salt Sentry gevonden op {host}. Wil je dit apparaat toevoegen?"
+      },
       "user": {
         "title": "Salt Sentry Installatie",
-        "description": "Configureer je Salt Sentry. Vul de afstanden in die de sensor van bovenaf meet: een kleine afstand betekent veel zout, een grote afstand betekent weinig zout.",
+        "description": "Configureer je Salt Sentry apparaat. Een kleine afstand betekent veel zout, een grote afstand betekent weinig zout.",
         "data": {
           "host": "IP-adres",
           "unit": "Eenheid voor de metingen",
-          "full_distance": "Afstand bij vol (cm)",
-          "empty_distance": "Afstand bij leeg (cm)",
+          "full_distance": "Afstand bij vol",
+          "empty_distance": "Afstand bij leeg",
           "scan_interval": "Poll-interval (minuten)"
         }
       }
@@ -21,11 +25,11 @@
     "step": {
       "init": {
         "title": "Salt Sentry Instellingen",
-        "description": "Vul de afstanden in die de sensor van bovenaf meet: een kleine afstand betekent veel zout, een grote afstand betekent weinig zout.",
+        "description": "Een kleine afstand betekent veel zout, een grote afstand betekent weinig zout.",
         "data": {
           "unit": "Eenheid voor de metingen",
-          "full_distance": "Afstand bij vol (cm)",
-          "empty_distance": "Afstand bij leeg (cm)",
+          "full_distance": "Afstand bij vol",
+          "empty_distance": "Afstand bij leeg",
           "scan_interval": "Poll-interval (minuten)"
         }
       }

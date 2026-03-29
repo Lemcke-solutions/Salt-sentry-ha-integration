@@ -3,10 +3,16 @@ from homeassistant import config_entries
 from homeassistant.core import callback
 from .const import *
 
+MANUFACTURER = "Lemcke Solutions"
+
+
 class SaltSentryConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
     VERSION = 1
     CONNECTION_CLASS = config_entries.CONN_CLASS_LOCAL_POLL
+
+    def __init__(self):
+        self._host = ""
 
     async def async_step_zeroconf(self, discovery_info):
         """Handle zeroconf discovery."""
@@ -14,18 +20,32 @@ class SaltSentryConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         device_id = discovery_info.properties.get("id")
 
         await self.async_set_unique_id(device_id)
-        self._abort_if_unique_id_configured(updates={CONF_HOST: host})  # ← update IP als het al bestaat
+        self._abort_if_unique_id_configured(updates={CONF_HOST: host})
 
-        # Sla host op in context zodat async_step_user hem kan gebruiken
-        self.context["title_placeholders"] = {"host": host}
-        self._host = host  # ← bewaar als instance variabele
+        self._host = host
+        self.context["title_placeholders"] = {
+            "host": host,
+            "name": MANUFACTURER,
+        }
 
-        return await self.async_step_user()  # ← roep ZONDER user_input aan
+        return await self.async_step_zeroconf_confirm()
+
+    async def async_step_zeroconf_confirm(self, user_input=None):
+        """Bevestigingsstap na zeroconf discovery."""
+        if user_input is not None:
+            return await self.async_step_user()
+
+        return self.async_show_form(
+            step_id="zeroconf_confirm",
+            description_placeholders={
+                "host": self._host,
+                "name": MANUFACTURER,
+            },
+        )
 
     async def async_step_user(self, user_input=None):
         """Handle the manual/user step."""
         errors = {}
-        # Gebruik host uit instance var (zeroconf) of uit user_input, of leeg
         host = (user_input.get(CONF_HOST) if user_input else None) or getattr(self, "_host", "")
 
         if user_input is not None and CONF_FULL in user_input and CONF_EMPTY in user_input:
@@ -39,7 +59,6 @@ class SaltSentryConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     data=user_input
                 )
 
-        # Schema met defaults vanuit user_input of fallback
         schema = vol.Schema({
             vol.Required(CONF_HOST, default=host): str,
             vol.Required(CONF_UNIT, default=user_input.get(CONF_UNIT, UNIT_CM) if user_input else UNIT_CM): vol.In([UNIT_CM, UNIT_INCH]),
@@ -52,7 +71,7 @@ class SaltSentryConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             step_id="user",
             data_schema=schema,
             errors=errors,
-            description_placeholders={"host": host}  # Laat het IP zien bovenaan het formulier
+            description_placeholders={"host": host},
         )
 
     @staticmethod
@@ -76,7 +95,7 @@ class SaltSentryOptionsFlow(config_entries.OptionsFlow):
             if empty <= full:
                 errors["full_distance"] = "error_full_gt_empty"
             else:
-                new_options = {**self._config_entry.data, **self._config_entry.options, **user_input}
+                new_options = {**current, **user_input}
                 return self.async_create_entry(title=self._config_entry.title, data=new_options)
 
         schema = vol.Schema({
@@ -89,5 +108,5 @@ class SaltSentryOptionsFlow(config_entries.OptionsFlow):
         return self.async_show_form(
             step_id="init",
             data_schema=schema,
-            errors=errors
+            errors=errors,
         )

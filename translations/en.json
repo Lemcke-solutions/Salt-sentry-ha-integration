@@ -1,9 +1,13 @@
 {
   "config": {
     "step": {
+      "zeroconf_confirm": {
+        "title": "Salt Sentry found",
+        "description": "{name} Salt Sentry found at {host}. Do you want to add this device?"
+      },
       "user": {
         "title": "Salt Sentry Setup",
-        "description": "Configure your Salt Sentry. Enter the distances the sensor measures from above: a small distance means a lot of salt, a large distance means little salt.",
+        "description": "Configure your Salt Sentry device. A small distance means a lot of salt, a large distance means little salt.",
         "data": {
           "host": "IP address",
           "unit": "Unit of measurement",
@@ -21,7 +25,7 @@
     "step": {
       "init": {
         "title": "Salt Sentry Options",
-        "description": "Enter the distances the sensor measures from above: a small distance means a lot of salt, a large distance means little salt.",
+        "description": "A small distance means a lot of salt, a large distance means little salt.",
         "data": {
           "unit": "Unit of measurement",
           "full_distance": "Distance when full (cm)",
