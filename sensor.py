@@ -19,14 +19,59 @@ class SaltBaseSensor(CoordinatorEntity, SensorEntity):
         return DeviceInfo(
             identifiers={(DOMAIN, device_id)},
             name=f"Salt Sentry {device_id[-4:]}",
-            manufacturer="Salt Sentry",
+            manufacturer="Lemcke Solutions",
             model="Salt Sentry",
             sw_version=firmware,
             configuration_url=f"http://{self.entry.data[CONF_HOST]}",
         )
 
+    def _get_config(self):
+        return {**self.entry.data, **self.entry.options}
+
+    def _get_unit(self):
+        return self._get_config().get(CONF_UNIT, UNIT_CM)
+
+    def _get_correction_cm(self):
+        """Geeft de correctie altijd terug in cm, ongeacht de gekozen eenheid."""
+        config = self._get_config()
+        correction = config.get(CONF_CORRECTION, DEFAULT_CORRECTION)
+        if self._get_unit() == UNIT_INCH:
+            return correction * 2.54
+        return correction
+
+    def _raw_measurement_cm(self):
+        return self.coordinator.data["measurement"]
+
+    def _corrected_measurement_cm(self):
+        return self._raw_measurement_cm() + self._get_correction_cm()
+
+    def _to_display_unit(self, value_cm):
+        if self._get_unit() == UNIT_INCH:
+            return round(value_cm / 2.54, 2)
+        return round(value_cm, 1)
+
+    @property
+    def native_unit_of_measurement(self):
+        return "in" if self._get_unit() == UNIT_INCH else "cm"
+
+
+class SaltRawDistanceSensor(SaltBaseSensor):
+    """Ruwe meting direct van de sensor, zonder correctie."""
+
+    def __init__(self, coordinator, entry):
+        super().__init__(coordinator, entry)
+        device_id = coordinator.data.get("unique_id")
+        self._attr_name = f"Salt Distance raw{device_id[-4:]}"
+        self._attr_unique_id = f"{device_id}_raw_distance"
+
+    @property
+    def native_value(self):
+        return self._to_display_unit(self._raw_measurement_cm())
+
 
 class SaltDistanceSensor(SaltBaseSensor):
+    """Gecorrigeerde afstandsmeting."""
+
     def __init__(self, coordinator, entry):
         super().__init__(coordinator, entry)
         device_id = coordinator.data.get("unique_id")
@@ -35,20 +80,12 @@ class SaltDistanceSensor(SaltBaseSensor):
 
     @property
     def native_value(self):
-        measurement_cm = self.coordinator.data["measurement"]
-        unit = self.entry.options.get(CONF_UNIT, self.entry.data[CONF_UNIT])
-
-        if unit == UNIT_INCH:
-            return round(measurement_cm / 2.54, 2)
-        return measurement_cm
-
-    @property
-    def native_unit_of_measurement(self):
-        unit = self.entry.options.get(CONF_UNIT, self.entry.data[CONF_UNIT])
-        return "in" if unit == UNIT_INCH else "cm"
+        return self._to_display_unit(self._corrected_measurement_cm())
 
 
 class SaltPercentageSensor(SaltBaseSensor):
+    """Zoutniveau in procenten, berekend op basis van gecorrigeerde meting."""
+
     def __init__(self, coordinator, entry):
         super().__init__(coordinator, entry)
         device_id = coordinator.data.get("unique_id")
@@ -58,9 +95,8 @@ class SaltPercentageSensor(SaltBaseSensor):
 
     @property
     def native_value(self):
-        measurement = self.coordinator.data["measurement"]
-
-        config = {**self.entry.data, **self.entry.options}
+        measurement = self._corrected_measurement_cm()
+        config = self._get_config()
         full = config[CONF_FULL]
         empty = config[CONF_EMPTY]
 
@@ -75,6 +111,7 @@ async def async_setup_entry(hass, entry, async_add_entities):
     coordinator = hass.data[DOMAIN][entry.entry_id]
 
     async_add_entities([
+        SaltRawDistanceSensor(coordinator, entry),
         SaltDistanceSensor(coordinator, entry),
         SaltPercentageSensor(coordinator, entry),
     ])

@@ -88,6 +88,7 @@ class SaltSentryOptionsFlow(config_entries.OptionsFlow):
     async def async_step_init(self, user_input=None):
         errors = {}
         current = {**self._config_entry.data, **self._config_entry.options}
+        unit = current.get(CONF_UNIT, UNIT_CM)
 
         if user_input is not None:
             full = float(user_input[CONF_FULL])
@@ -98,15 +99,20 @@ class SaltSentryOptionsFlow(config_entries.OptionsFlow):
                 new_options = {**current, **user_input}
                 return self.async_create_entry(title=self._config_entry.title, data=new_options)
 
+        # Correctielabel past zich aan op gekozen eenheid
+        correction_label = CONF_CORRECTION
+
         schema = vol.Schema({
-            vol.Required(CONF_UNIT, default=current.get(CONF_UNIT, UNIT_CM)): vol.In([UNIT_CM, UNIT_INCH]),
+            vol.Required(CONF_UNIT, default=unit): vol.In([UNIT_CM, UNIT_INCH]),
             vol.Required(CONF_FULL, default=current.get(CONF_FULL, 0)): vol.Coerce(float),
             vol.Required(CONF_EMPTY, default=current.get(CONF_EMPTY, 0)): vol.Coerce(float),
             vol.Required(CONF_SCAN_INTERVAL, default=current.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL)): vol.Coerce(int),
+            vol.Optional(CONF_CORRECTION, default=current.get(CONF_CORRECTION, DEFAULT_CORRECTION)): vol.Coerce(float),
         })
 
         return self.async_show_form(
             step_id="init",
             data_schema=schema,
             errors=errors,
+            description_placeholders={"unit": unit},
         )

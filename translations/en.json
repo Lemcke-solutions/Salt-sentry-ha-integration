@@ -25,12 +25,13 @@
     "step": {
       "init": {
         "title": "Salt Sentry Options",
-        "description": "A small distance means a lot of salt, a large distance means little salt.",
+        "description": "A small distance means a lot of salt, a large distance means little salt. The correction is added to the measurement (negative = subtract), in {unit}.",
         "data": {
           "unit": "Unit of measurement",
-          "full_distance": "Distance when full (cm)",
-          "empty_distance": "Distance when empty (cm)",
-          "scan_interval": "Polling interval (minutes)"
+          "full_distance": "Distance when full",
+          "empty_distance": "Distance when empty",
+          "scan_interval": "Polling interval (minutes)",
+          "correction": "Measurement correction"
         }
       }
     },

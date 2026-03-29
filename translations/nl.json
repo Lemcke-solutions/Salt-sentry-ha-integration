@@ -11,8 +11,8 @@
         "data": {
           "host": "IP-adres",
           "unit": "Eenheid voor de metingen",
-          "full_distance": "Afstand bij vol",
-          "empty_distance": "Afstand bij leeg",
+          "full_distance": "Afstand bij vol (cm)",
+          "empty_distance": "Afstand bij leeg (cm)",
           "scan_interval": "Poll-interval (minuten)"
         }
       }
@@ -25,12 +25,13 @@
     "step": {
       "init": {
         "title": "Salt Sentry Instellingen",
-        "description": "Een kleine afstand betekent veel zout, een grote afstand betekent weinig zout.",
+        "description": "Een kleine afstand betekent veel zout, een grote afstand betekent weinig zout. De correctie wordt opgeteld bij de meting (negatief = aftrekken), in {unit}.",
         "data": {
           "unit": "Eenheid voor de metingen",
           "full_distance": "Afstand bij vol",
           "empty_distance": "Afstand bij leeg",
-          "scan_interval": "Poll-interval (minuten)"
+          "scan_interval": "Poll-interval (minuten)",
+          "correction": "Correctie op de meting"
         }
       }
     },
