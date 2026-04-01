@@ -43,7 +43,11 @@ class SaltBaseSensor(CoordinatorEntity, SensorEntity):
         return self.coordinator.data["measurement"]
 
     def _corrected_measurement_cm(self):
-        return self._raw_measurement_cm() + self._get_correction_cm()
+        corrected = self._raw_measurement_cm() + self._get_correction_cm()
+        if corrected < 0:
+            return 0
+
+        return corrected
 
     def _to_display_unit(self, value_cm):
         if self._get_unit() == UNIT_INCH:
@@ -61,7 +65,7 @@ class SaltRawDistanceSensor(SaltBaseSensor):
     def __init__(self, coordinator, entry):
         super().__init__(coordinator, entry)
         device_id = coordinator.data.get("unique_id")
-        self._attr_name = f"Salt Distance raw{device_id[-4:]}"
+        self._attr_name = f"Salt Distance raw {device_id[-4:]}"
         self._attr_unique_id = f"{device_id}_raw_distance"
 
     @property
@@ -91,7 +95,10 @@ class SaltPercentageSensor(SaltBaseSensor):
         device_id = coordinator.data.get("unique_id")
         self._attr_name = f"Salt Level {device_id[-4:]}"
         self._attr_unique_id = f"{device_id}_percentage"
-        self._attr_native_unit_of_measurement = "%"
+
+    @property
+    def native_unit_of_measurement(self):
+        return "%"
 
     @property
     def native_value(self):
