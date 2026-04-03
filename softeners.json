@@ -1,0 +1,42 @@
+{
+  "aqua_cell": {
+    "name": "Aqua Cell",
+    "full_cm": 5,
+    "empty_cm": 35
+  },
+  "blaat": {
+    "name": "De blaat ontharder!",
+    "full_cm": 10,
+    "empty_cm": 45
+  },
+    "blaat1": {
+    "name": "De blaat ontharder!",
+    "full_cm": 10,
+    "empty_cm": 45
+  },
+    "blaat2": {
+    "name": "De blaat ontharder!",
+    "full_cm": 10,
+    "empty_cm": 45
+  },
+    "blaat3": {
+    "name": "De blaat ontharder!",
+    "full_cm": 10,
+    "empty_cm": 45
+  },
+    "blaat4": {
+    "name": "De blaat ontharder!",
+    "full_cm": 10,
+    "empty_cm": 45
+  },
+    "blaat5": {
+    "name": "De blaat ontharder!",
+    "full_cm": 10,
+    "empty_cm": 45
+  },
+  "other": {
+    "name": "Other",
+    "full_cm": null,
+    "empty_cm": null
+  }
+}

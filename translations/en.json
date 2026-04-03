@@ -6,37 +6,50 @@
         "description": "{name} Salt Sentry found at {host}. Do you want to add this device?"
       },
       "user": {
-        "title": "Salt Sentry Setup",
-        "description": "Configure your Salt Sentry device. A small distance means a lot of salt, a large distance means little salt.",
+        "title": "Set up Salt Sentry",
+        "description": "Select your water softener from the list. Choose 'Other' if your model is not listed and configure the distances manually.",
         "data": {
           "host": "IP address",
-          "unit": "Unit of measurement",
-          "full_distance": "Distance when full (cm)",
-          "empty_distance": "Distance when empty (cm)",
-          "scan_interval": "Polling interval (minutes)"
+          "unit": "Unit",
+          "softener_type": "Water softener",
+          "scan_interval": "Update interval (minutes)"
+        }
+      },
+      "distances": {
+        "title": "Set distances",
+        "description": "Settings for {model}. A small distance means a full tank (a lot of salt), a large distance means an empty tank.",
+        "data": {
+          "full_distance": "Distance when tank is full",
+          "empty_distance": "Distance when tank is empty",
+          "scan_interval": "Update interval (minutes)"
         }
       }
     },
     "error": {
+      "cannot_connect": "Failed to connect",
+      "invalid_host": "Invalid IP address",
+      "unknown": "Unexpected error occurred",
       "error_full_gt_empty": "Full distance must be smaller than empty distance"
     }
   },
   "options": {
     "step": {
       "init": {
-        "title": "Salt Sentry Options",
-        "description": "A small distance means a lot of salt, a large distance means little salt. The correction is added to the measurement (negative = subtract), in {unit}.",
+        "title": "Adjust Salt Sentry",
+        "description": "Update your water softener settings.",
         "data": {
-          "unit": "Unit of measurement",
-          "full_distance": "Distance when full",
-          "empty_distance": "Distance when empty",
-          "scan_interval": "Polling interval (minutes)",
-          "correction": "Measurement correction"
+          "unit": "Unit",
+          "softener_type": "Water softener"
+        }
+      },
+      "distances": {
+        "title": "Adjust distances",
+        "description": "Settings for {model}. A small distance means a full tank, a large distance means an empty tank.",
+        "data": {
+          "full_distance": "Distance when tank is full",
+          "empty_distance": "Distance when tank is empty"
         }
       }
-    },
-    "error": {
-      "error_full_gt_empty": "Full distance must be smaller than empty distance"
     }
   }
 }

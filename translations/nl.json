@@ -6,37 +6,50 @@
         "description": "{name} Salt Sentry gevonden op {host}. Wil je dit apparaat toevoegen?"
       },
       "user": {
-        "title": "Salt Sentry Installatie",
-        "description": "Configureer je Salt Sentry apparaat. Een kleine afstand betekent veel zout, een grote afstand betekent weinig zout.",
+        "title": "Salt Sentry instellen",
+        "description": "Kies je waterontharder uit de lijst. Kies 'Other' als jouw model er niet tussen staat en voer de afstanden handmatig in.",
         "data": {
           "host": "IP-adres",
-          "unit": "Eenheid voor de metingen",
-          "full_distance": "Afstand bij vol (cm)",
-          "empty_distance": "Afstand bij leeg (cm)",
-          "scan_interval": "Poll-interval (minuten)"
+          "unit": "Eenheid",
+          "softener_type": "Waterontharder",
+          "scan_interval": "Update-interval (minuten)"
+        }
+      },
+      "distances": {
+        "title": "Afstanden instellen",
+        "description": "Instellingen voor {model}. Een kleine afstand betekent veel zout (volle tank), een grote afstand betekent weinig zout (lege tank).",
+        "data": {
+          "full_distance": "Afstand bij volle tank",
+          "empty_distance": "Afstand bij lege tank",
+          "scan_interval": "Update-interval (minuten)"
         }
       }
     },
     "error": {
-      "error_full_gt_empty": "De afstand bij vol moet kleiner zijn dan de afstand bij leeg"
+      "cannot_connect": "Kan geen verbinding maken",
+      "invalid_host": "Ongeldig IP-adres",
+      "unknown": "Onverwachte fout",
+      "error_full_gt_empty": "Afstand bij volle tank moet kleiner zijn dan bij lege tank"
     }
   },
   "options": {
     "step": {
       "init": {
-        "title": "Salt Sentry Instellingen",
-        "description": "Een kleine afstand betekent veel zout, een grote afstand betekent weinig zout. De correctie wordt opgeteld bij de meting (negatief = aftrekken), in {unit}.",
+        "title": "Salt Sentry aanpassen",
+        "description": "Pas je waterontharder instellingen aan.",
         "data": {
-          "unit": "Eenheid voor de metingen",
-          "full_distance": "Afstand bij vol",
-          "empty_distance": "Afstand bij leeg",
-          "scan_interval": "Poll-interval (minuten)",
-          "correction": "Correctie op de meting"
+          "unit": "Eenheid",
+          "softener_type": "Waterontharder"
+        }
+      },
+      "distances": {
+        "title": "Afstanden aanpassen",
+        "description": "Instellingen voor {model}. Een kleine afstand betekent veel zout, een grote afstand betekent weinig zout.",
+        "data": {
+          "full_distance": "Afstand bij volle tank",
+          "empty_distance": "Afstand bij lege tank"
         }
       }
-    },
-    "error": {
-      "error_full_gt_empty": "De afstand bij vol moet kleiner zijn dan de afstand bij leeg"
     }
   }
 }

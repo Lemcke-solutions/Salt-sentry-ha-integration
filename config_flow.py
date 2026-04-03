@@ -44,34 +44,64 @@ class SaltSentryConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         )
 
     async def async_step_user(self, user_input=None):
-        """Handle the manual/user step."""
-        errors = {}
-        host = (user_input.get(CONF_HOST) if user_input else None) or getattr(self, "_host", "")
+        if user_input is not None:
+            self._host = user_input[CONF_HOST]
+            self._unit = user_input[CONF_UNIT]
+            self._softeners = load_softeners(self.hass)
+            self._softener_type = user_input["softener_type"]
+            return await self.async_step_distances()
 
-        if user_input is not None and CONF_FULL in user_input and CONF_EMPTY in user_input:
+        softeners = load_softeners(self.hass)
+
+        return self.async_show_form(
+            step_id="user",
+            data_schema=vol.Schema({
+                vol.Required(CONF_HOST, default=getattr(self, "_host", "")): str,
+                vol.Required(CONF_UNIT, default=UNIT_CM): vol.In([UNIT_CM, UNIT_INCH]),
+                vol.Required("softener_type"): vol.In({
+                    k: v["name"] for k, v in softeners.items()
+                }),
+                vol.Required(CONF_SCAN_INTERVAL, default=DEFAULT_SCAN_INTERVAL): vol.Coerce(int),
+            }),
+        )
+
+    async def async_step_distances(self, user_input=None):
+        errors = {}
+        preset = self._softeners[self._softener_type]
+
+        default_full = cm_to_unit(preset["full_cm"], self._unit) or 0
+        default_empty = cm_to_unit(preset["empty_cm"], self._unit) or 0
+
+        if user_input is not None:
             full = float(user_input[CONF_FULL])
             empty = float(user_input[CONF_EMPTY])
+
             if empty <= full:
                 errors["full_distance"] = "error_full_gt_empty"
             else:
                 return self.async_create_entry(
-                    title=f"Salt Sentry ({host})",
-                    data=user_input
+                    title=f"Salt Sentry ({self._host})",
+                    data={
+                        CONF_HOST: self._host,
+                        CONF_UNIT: self._unit,
+                        "softener_type": self._softener_type,
+                        CONF_FULL: full,
+                        CONF_EMPTY: empty,
+                        CONF_SCAN_INTERVAL: user_input[CONF_SCAN_INTERVAL],
+                    }
                 )
 
-        schema = vol.Schema({
-            vol.Required(CONF_HOST, default=host): str,
-            vol.Required(CONF_UNIT, default=user_input.get(CONF_UNIT, UNIT_CM) if user_input else UNIT_CM): vol.In([UNIT_CM, UNIT_INCH]),
-            vol.Required(CONF_FULL, default=user_input.get(CONF_FULL, 0) if user_input else 0): vol.Coerce(float),
-            vol.Required(CONF_EMPTY, default=user_input.get(CONF_EMPTY, 0) if user_input else 0): vol.Coerce(float),
-            vol.Required(CONF_SCAN_INTERVAL, default=user_input.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL) if user_input else DEFAULT_SCAN_INTERVAL): vol.Coerce(int),
-        })
-
         return self.async_show_form(
-            step_id="user",
-            data_schema=schema,
+            step_id="distances",
+            data_schema=vol.Schema({
+                vol.Required(CONF_FULL, default=default_full): vol.Coerce(float),
+                vol.Required(CONF_EMPTY, default=default_empty): vol.Coerce(float),
+                vol.Required(CONF_SCAN_INTERVAL, default=DEFAULT_SCAN_INTERVAL): vol.Coerce(int),
+            }),
             errors=errors,
-            description_placeholders={"host": host},
+            description_placeholders={
+                "model": self._softeners[self._softener_type]["name"]
+            },
         )
 
     @staticmethod
@@ -86,33 +116,58 @@ class SaltSentryOptionsFlow(config_entries.OptionsFlow):
         self._config_entry = config_entry
 
     async def async_step_init(self, user_input=None):
+        current = {**self._config_entry.data, **self._config_entry.options}
+        softeners = load_softeners(self.hass)
+
+        if user_input is not None:
+            self._unit = user_input[CONF_UNIT]
+            self._softener_type = user_input["softener_type"]
+            return await self.async_step_distances()
+
+        return self.async_show_form(
+            step_id="init",
+            data_schema=vol.Schema({
+                vol.Required(CONF_UNIT, default=current.get(CONF_UNIT, UNIT_CM)): vol.In([UNIT_CM, UNIT_INCH]),
+                vol.Required("softener_type", default=current.get("softener_type", "other")): vol.In({
+                    k: v["name"] for k, v in softeners.items()
+                }),
+            }),
+        )
+
+    async def async_step_distances(self, user_input=None):
         errors = {}
         current = {**self._config_entry.data, **self._config_entry.options}
-        unit = current.get(CONF_UNIT, UNIT_CM)
+        softeners = load_softeners(self.hass)
+
+        preset = softeners[self._softener_type]
+
+        default_full = current.get(CONF_FULL) or cm_to_unit(preset["full_cm"], self._unit) or 0
+        default_empty = current.get(CONF_EMPTY) or cm_to_unit(preset["empty_cm"], self._unit) or 0
 
         if user_input is not None:
             full = float(user_input[CONF_FULL])
             empty = float(user_input[CONF_EMPTY])
+
             if empty <= full:
                 errors["full_distance"] = "error_full_gt_empty"
             else:
-                new_options = {**current, **user_input}
-                return self.async_create_entry(title=self._config_entry.title, data=new_options)
-
-        # Correctielabel past zich aan op gekozen eenheid
-        correction_label = CONF_CORRECTION
-
-        schema = vol.Schema({
-            vol.Required(CONF_UNIT, default=unit): vol.In([UNIT_CM, UNIT_INCH]),
-            vol.Required(CONF_FULL, default=current.get(CONF_FULL, 0)): vol.Coerce(float),
-            vol.Required(CONF_EMPTY, default=current.get(CONF_EMPTY, 0)): vol.Coerce(float),
-            vol.Required(CONF_SCAN_INTERVAL, default=current.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL)): vol.Coerce(int),
-            vol.Optional(CONF_CORRECTION, default=current.get(CONF_CORRECTION, DEFAULT_CORRECTION)): vol.Coerce(float),
-        })
+                new_options = {
+                    **current,
+                    CONF_UNIT: self._unit,
+                    "softener_type": self._softener_type,
+                    CONF_FULL: full,
+                    CONF_EMPTY: empty,
+                }
+                return self.async_create_entry(title="", data=new_options)
 
         return self.async_show_form(
-            step_id="init",
-            data_schema=schema,
+            step_id="distances",
+            data_schema=vol.Schema({
+                vol.Required(CONF_FULL, default=default_full): vol.Coerce(float),
+                vol.Required(CONF_EMPTY, default=default_empty): vol.Coerce(float),
+            }),
             errors=errors,
-            description_placeholders={"unit": unit},
+            description_placeholders={
+                "model": softeners[self._softener_type]["name"]
+            },
         )

@@ -1,3 +1,6 @@
+import json
+import os
+
 DOMAIN = "salt_sentry"
 
 CONF_HOST = "host"
@@ -12,3 +15,19 @@ DEFAULT_CORRECTION = 0.0
 
 UNIT_CM = "cm"
 UNIT_INCH = "inch"
+
+SOFTENER_FILE = "softeners.json"
+
+
+def load_softeners(hass):
+    path = hass.config.path(f"custom_components/{DOMAIN}/{SOFTENER_FILE}")
+    with open(path, "r") as f:
+        return json.load(f)
+
+
+def cm_to_unit(value_cm, unit):
+    if value_cm is None:
+        return None
+    if unit == UNIT_INCH:
+        return round(value_cm / 2.54, 2)
+    return value_cm
