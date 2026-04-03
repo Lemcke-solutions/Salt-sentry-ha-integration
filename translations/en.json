@@ -11,8 +11,7 @@
         "data": {
           "host": "IP address",
           "unit": "Unit",
-          "softener_type": "Water softener",
-          "scan_interval": "Update interval (minutes)"
+          "softener_type": "Water softener"
         }
       },
       "distances": {
@@ -47,7 +46,8 @@
         "description": "Settings for {model}. A small distance means a full tank, a large distance means an empty tank.",
         "data": {
           "full_distance": "Distance when tank is full",
-          "empty_distance": "Distance when tank is empty"
+          "empty_distance": "Distance when tank is empty",
+          "scan_interval": "Update interval (minutes)"
         }
       }
     }

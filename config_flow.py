@@ -61,7 +61,6 @@ class SaltSentryConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 vol.Required("softener_type"): vol.In({
                     k: v["name"] for k, v in softeners.items()
                 }),
-                vol.Required(CONF_SCAN_INTERVAL, default=DEFAULT_SCAN_INTERVAL): vol.Coerce(int),
             }),
         )
 
@@ -157,6 +156,7 @@ class SaltSentryOptionsFlow(config_entries.OptionsFlow):
                     "softener_type": self._softener_type,
                     CONF_FULL: full,
                     CONF_EMPTY: empty,
+                    CONF_SCAN_INTERVAL: user_input[CONF_SCAN_INTERVAL],
                 }
                 return self.async_create_entry(title="", data=new_options)
 
@@ -165,6 +165,7 @@ class SaltSentryOptionsFlow(config_entries.OptionsFlow):
             data_schema=vol.Schema({
                 vol.Required(CONF_FULL, default=default_full): vol.Coerce(float),
                 vol.Required(CONF_EMPTY, default=default_empty): vol.Coerce(float),
+                vol.Required(CONF_SCAN_INTERVAL, default=current.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL)): vol.Coerce(int),
             }),
             errors=errors,
             description_placeholders={

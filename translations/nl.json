@@ -11,8 +11,7 @@
         "data": {
           "host": "IP-adres",
           "unit": "Eenheid",
-          "softener_type": "Waterontharder",
-          "scan_interval": "Update-interval (minuten)"
+          "softener_type": "Waterontharder"
         }
       },
       "distances": {
@@ -47,7 +46,8 @@
         "description": "Instellingen voor {model}. Een kleine afstand betekent veel zout, een grote afstand betekent weinig zout.",
         "data": {
           "full_distance": "Afstand bij volle tank",
-          "empty_distance": "Afstand bij lege tank"
+          "empty_distance": "Afstand bij lege tank",
+          "scan_interval": "Update-interval (minuten)"
         }
       }
     }
