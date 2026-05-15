@@ -9,7 +9,10 @@ from .const import *
 
 _LOGGER = logging.getLogger(__name__)
 
-GITHUB_RELEASES_URL = "https://api.github.com/repos/Lemcke-solutions/saltSentryFirmware/releases/latest"
+GITHUB_RELEASES_URL = {
+    "ESP8266": "https://api.github.com/repos/Lemcke-solutions/saltSentryFirmware/releases/latest",
+    "ESP32":   "https://api.github.com/repos/Lemcke-solutions/saltSentryFirmware_rev2/releases/latest",
+}
 GITHUB_CHECK_INTERVAL = timedelta(hours=6)
 
 
@@ -71,9 +74,11 @@ class SaltSentryUpdateEntity(CoordinatorEntity, UpdateEntity):
 
     async def _fetch_latest_release(self):
         """Haal de laatste release op van GitHub."""
+        chip_model = self.coordinator.data.get("chip_model", "ESP8266")
+        url = GITHUB_RELEASES_URL.get(chip_model, GITHUB_RELEASES_URL["ESP8266"])
         session = async_get_clientsession(self.hass)
         try:
-            async with session.get(GITHUB_RELEASES_URL) as resp:
+            async with session.get(url) as resp:
                 resp.raise_for_status()
                 data = await resp.json()
                 self._latest_version = data["tag_name"].lstrip("v")
