@@ -114,6 +114,25 @@ class SaltPercentageSensor(SaltBaseSensor):
         return max(0, min(100, round(percentage, 1)))
 
 
+class SaltHardwareRevisionSensor(SaltBaseSensor):
+    """Hardware revisie van het apparaat (A = ESP8266, B = ESP32)."""
+
+    def __init__(self, coordinator, entry):
+        super().__init__(coordinator, entry)
+        device_id = coordinator.data.get("unique_id")
+        self._attr_name = f"Salt Sentry {device_id[-4:]} Hardware Revision"
+        self._attr_unique_id = f"{device_id}_hardware_revision"
+        self._attr_icon = "mdi:chip"
+
+    @property
+    def native_unit_of_measurement(self):
+        return None
+
+    @property
+    def native_value(self):
+        return self.coordinator.data.get("hardware_revision", "A")
+
+
 async def async_setup_entry(hass, entry, async_add_entities):
     coordinator = hass.data[DOMAIN][entry.entry_id]
 
@@ -121,4 +140,5 @@ async def async_setup_entry(hass, entry, async_add_entities):
         SaltRawDistanceSensor(coordinator, entry),
         SaltDistanceSensor(coordinator, entry),
         SaltPercentageSensor(coordinator, entry),
+        SaltHardwareRevisionSensor(coordinator, entry),
     ])

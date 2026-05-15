@@ -52,7 +52,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
             "measurement": measurement_cm,
             "unique_id": unique_id,
             "firmware_version": data.get("firmware_version", "unknown"),
-            "chip_model": data.get("chip_model", "ESP8266"),
+            "hardware_revision": data.get("hardware_revision", "A"),
         }
 
     coordinator = DataUpdateCoordinator(
