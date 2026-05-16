@@ -47,11 +47,11 @@ class SaltSentryConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         if user_input is not None:
             self._host = user_input[CONF_HOST]
             self._unit = user_input[CONF_UNIT]
-            self._softeners = load_softeners(self.hass)
+            self._softeners = await async_load_softeners(self.hass)
             self._softener_type = user_input["softener_type"]
             return await self.async_step_distances()
 
-        softeners = load_softeners(self.hass)
+        softeners = await async_load_softeners(self.hass)
 
         return self.async_show_form(
             step_id="user",
@@ -116,7 +116,7 @@ class SaltSentryOptionsFlow(config_entries.OptionsFlow):
 
     async def async_step_init(self, user_input=None):
         current = {**self._config_entry.data, **self._config_entry.options}
-        softeners = load_softeners(self.hass)
+        softeners = await async_load_softeners(self.hass)
 
         if user_input is not None:
             self._unit = user_input[CONF_UNIT]
@@ -136,7 +136,7 @@ class SaltSentryOptionsFlow(config_entries.OptionsFlow):
     async def async_step_distances(self, user_input=None):
         errors = {}
         current = {**self._config_entry.data, **self._config_entry.options}
-        softeners = load_softeners(self.hass)
+        softeners = await async_load_softeners(self.hass)
 
         preset = softeners[self._softener_type]
 

@@ -19,10 +19,14 @@ UNIT_INCH = "inch"
 SOFTENER_FILE = "softeners.json"
 
 
-def load_softeners(hass):
-    path = hass.config.path(f"custom_components/{DOMAIN}/{SOFTENER_FILE}")
+def _load_softeners_sync(path):
     with open(path, "r") as f:
         return json.load(f)
+
+
+async def async_load_softeners(hass):
+    path = hass.config.path(f"custom_components/{DOMAIN}/{SOFTENER_FILE}")
+    return await hass.async_add_executor_job(_load_softeners_sync, path)
 
 
 def cm_to_unit(value_cm, unit):
