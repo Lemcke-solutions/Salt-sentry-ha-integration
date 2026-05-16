@@ -1,6 +1,7 @@
 from homeassistant.components.sensor import SensorEntity
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from homeassistant.helpers.device_registry import DeviceInfo
+from homeassistant.helpers.entity import EntityCategory
 from .const import *
 
 
@@ -62,6 +63,8 @@ class SaltBaseSensor(CoordinatorEntity, SensorEntity):
 class SaltRawDistanceSensor(SaltBaseSensor):
     """Ruwe meting direct van de sensor, zonder correctie."""
 
+    _attr_entity_category = EntityCategory.DIAGNOSTIC
+
     def __init__(self, coordinator, entry):
         super().__init__(coordinator, entry)
         device_id = coordinator.data.get("unique_id")
@@ -116,6 +119,8 @@ class SaltPercentageSensor(SaltBaseSensor):
 
 class SaltHardwareRevisionSensor(SaltBaseSensor):
     """Hardware revisie van het apparaat (A = ESP8266, B = ESP32)."""
+
+    _attr_entity_category = EntityCategory.DIAGNOSTIC
 
     def __init__(self, coordinator, entry):
         super().__init__(coordinator, entry)
