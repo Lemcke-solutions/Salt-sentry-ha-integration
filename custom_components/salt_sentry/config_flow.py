@@ -1,9 +1,27 @@
+from __future__ import annotations
+
+from typing import Any
+
 import voluptuous as vol
 from homeassistant import config_entries
-from homeassistant.core import callback
+from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from pysaltsentry import SaltSentryDevice, SaltSentryError
-from .const import *
+
+from .const import (
+    CONF_CORRECTION,
+    CONF_EMPTY,
+    CONF_FULL,
+    CONF_HOST,
+    CONF_SCAN_INTERVAL,
+    CONF_UNIT,
+    DEFAULT_SCAN_INTERVAL,
+    DOMAIN,
+    UNIT_CM,
+    UNIT_INCH,
+    async_load_softeners,
+    cm_to_unit,
+)
 
 MANUFACTURER = "Lemcke Solutions"
 
@@ -11,46 +29,46 @@ MANUFACTURER = "Lemcke Solutions"
 class SaltSentryConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
     VERSION = 1
-    CONNECTION_CLASS = config_entries.CONN_CLASS_LOCAL_POLL
 
-    def __init__(self):
-        self._host = ""
+    def __init__(self) -> None:
+        self._host: str = ""
+        self._unit: str = UNIT_CM
+        self._softener_type: str = ""
+        self._softeners: dict[str, Any] = {}
 
-    async def async_step_zeroconf(self, discovery_info):
-        """Handle zeroconf discovery."""
-        host = discovery_info.host
-        device_id = discovery_info.properties.get("id")
+    async def async_step_zeroconf(
+        self, discovery_info: config_entries.ZeroconfServiceInfo
+    ) -> config_entries.FlowResult:
+        host: str = discovery_info.host
+        device_id: str | None = discovery_info.properties.get("id")
 
         await self.async_set_unique_id(device_id)
         self._abort_if_unique_id_configured(updates={CONF_HOST: host})
 
         self._host = host
-        self.context["title_placeholders"] = {
-            "host": host,
-            "name": MANUFACTURER,
-        }
+        self.context["title_placeholders"] = {"host": host, "name": MANUFACTURER}
 
         return await self.async_step_zeroconf_confirm()
 
-    async def async_step_zeroconf_confirm(self, user_input=None):
-        """Bevestigingsstap na zeroconf discovery."""
+    async def async_step_zeroconf_confirm(
+        self, user_input: dict[str, Any] | None = None
+    ) -> config_entries.FlowResult:
         if user_input is not None:
             return await self.async_step_user()
 
         return self.async_show_form(
             step_id="zeroconf_confirm",
-            description_placeholders={
-                "host": self._host,
-                "name": MANUFACTURER,
-            },
+            description_placeholders={"host": self._host, "name": MANUFACTURER},
         )
 
-    async def async_step_user(self, user_input=None):
-        errors = {}
+    async def async_step_user(
+        self, user_input: dict[str, Any] | None = None
+    ) -> config_entries.FlowResult:
+        errors: dict[str, str] = {}
         softeners = await async_load_softeners(self.hass)
 
         if user_input is not None:
-            host = user_input[CONF_HOST]
+            host: str = user_input[CONF_HOST]
             try:
                 await SaltSentryDevice(host, async_get_clientsession(self.hass)).get_status()
             except SaltSentryError:
@@ -66,21 +84,21 @@ class SaltSentryConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         return self.async_show_form(
             step_id="user",
             data_schema=vol.Schema({
-                vol.Required(CONF_HOST, default=getattr(self, "_host", "")): str,
+                vol.Required(CONF_HOST, default=self._host): str,
                 vol.Required(CONF_UNIT, default=UNIT_CM): vol.In([UNIT_CM, UNIT_INCH]),
-                vol.Required("softener_type"): vol.In({
-                    k: v["name"] for k, v in softeners.items()
-                }),
+                vol.Required("softener_type"): vol.In({k: v["name"] for k, v in softeners.items()}),
             }),
             errors=errors,
         )
 
-    async def async_step_distances(self, user_input=None):
-        errors = {}
+    async def async_step_distances(
+        self, user_input: dict[str, Any] | None = None
+    ) -> config_entries.FlowResult:
+        errors: dict[str, str] = {}
         preset = self._softeners[self._softener_type]
 
-        default_full = cm_to_unit(preset["full_cm"], self._unit) or 0
-        default_empty = cm_to_unit(preset["empty_cm"], self._unit) or 0
+        default_full: float = cm_to_unit(preset["full_cm"], self._unit) or 0.0
+        default_empty: float = cm_to_unit(preset["empty_cm"], self._unit) or 0.0
 
         if user_input is not None:
             full = float(user_input[CONF_FULL])
@@ -98,7 +116,7 @@ class SaltSentryConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                         CONF_FULL: full,
                         CONF_EMPTY: empty,
                         CONF_SCAN_INTERVAL: user_input[CONF_SCAN_INTERVAL],
-                    }
+                    },
                 )
 
         return self.async_show_form(
@@ -109,17 +127,17 @@ class SaltSentryConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 vol.Required(CONF_SCAN_INTERVAL, default=DEFAULT_SCAN_INTERVAL): vol.Coerce(int),
             }),
             errors=errors,
-            description_placeholders={
-                "model": self._softeners[self._softener_type]["name"]
-            },
+            description_placeholders={"model": self._softeners[self._softener_type]["name"]},
         )
 
-    async def async_step_reconfigure(self, user_input=None):
-        errors = {}
+    async def async_step_reconfigure(
+        self, user_input: dict[str, Any] | None = None
+    ) -> config_entries.FlowResult:
+        errors: dict[str, str] = {}
         reconfigure_entry = self._get_reconfigure_entry()
 
         if user_input is not None:
-            host = user_input[CONF_HOST]
+            host: str = user_input[CONF_HOST]
             try:
                 await SaltSentryDevice(host, async_get_clientsession(self.hass)).get_status()
             except SaltSentryError:
@@ -141,17 +159,21 @@ class SaltSentryConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
     @staticmethod
     @callback
-    def async_get_options_flow(config_entry):
+    def async_get_options_flow(config_entry: config_entries.ConfigEntry) -> SaltSentryOptionsFlow:
         return SaltSentryOptionsFlow(config_entry)
 
 
 class SaltSentryOptionsFlow(config_entries.OptionsFlow):
 
-    def __init__(self, config_entry):
+    def __init__(self, config_entry: config_entries.ConfigEntry) -> None:
         self._config_entry = config_entry
+        self._unit: str = UNIT_CM
+        self._softener_type: str = ""
 
-    async def async_step_init(self, user_input=None):
-        current = {**self._config_entry.data, **self._config_entry.options}
+    async def async_step_init(
+        self, user_input: dict[str, Any] | None = None
+    ) -> config_entries.FlowResult:
+        current: dict[str, Any] = {**self._config_entry.data, **self._config_entry.options}
         softeners = await async_load_softeners(self.hass)
 
         if user_input is not None:
@@ -163,21 +185,22 @@ class SaltSentryOptionsFlow(config_entries.OptionsFlow):
             step_id="init",
             data_schema=vol.Schema({
                 vol.Required(CONF_UNIT, default=current.get(CONF_UNIT, UNIT_CM)): vol.In([UNIT_CM, UNIT_INCH]),
-                vol.Required("softener_type", default=current.get("softener_type", "other")): vol.In({
-                    k: v["name"] for k, v in softeners.items()
-                }),
+                vol.Required("softener_type", default=current.get("softener_type", "other")): vol.In(
+                    {k: v["name"] for k, v in softeners.items()}
+                ),
             }),
         )
 
-    async def async_step_distances(self, user_input=None):
-        errors = {}
-        current = {**self._config_entry.data, **self._config_entry.options}
+    async def async_step_distances(
+        self, user_input: dict[str, Any] | None = None
+    ) -> config_entries.FlowResult:
+        errors: dict[str, str] = {}
+        current: dict[str, Any] = {**self._config_entry.data, **self._config_entry.options}
         softeners = await async_load_softeners(self.hass)
-
         preset = softeners[self._softener_type]
 
-        default_full = current.get(CONF_FULL) or cm_to_unit(preset["full_cm"], self._unit) or 0
-        default_empty = current.get(CONF_EMPTY) or cm_to_unit(preset["empty_cm"], self._unit) or 0
+        default_full: float = current.get(CONF_FULL) or cm_to_unit(preset["full_cm"], self._unit) or 0.0
+        default_empty: float = current.get(CONF_EMPTY) or cm_to_unit(preset["empty_cm"], self._unit) or 0.0
 
         if user_input is not None:
             full = float(user_input[CONF_FULL])
@@ -186,15 +209,14 @@ class SaltSentryOptionsFlow(config_entries.OptionsFlow):
             if empty <= full:
                 errors["full_distance"] = "error_full_gt_empty"
             else:
-                new_options = {
+                return self.async_create_entry(title="", data={
                     **current,
                     CONF_UNIT: self._unit,
                     "softener_type": self._softener_type,
                     CONF_FULL: full,
                     CONF_EMPTY: empty,
                     CONF_SCAN_INTERVAL: user_input[CONF_SCAN_INTERVAL],
-                }
-                return self.async_create_entry(title="", data=new_options)
+                })
 
         return self.async_show_form(
             step_id="distances",
@@ -204,7 +226,5 @@ class SaltSentryOptionsFlow(config_entries.OptionsFlow):
                 vol.Required(CONF_SCAN_INTERVAL, default=current.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL)): vol.Coerce(int),
             }),
             errors=errors,
-            description_placeholders={
-                "model": softeners[self._softener_type]["name"]
-            },
+            description_placeholders={"model": softeners[self._softener_type]["name"]},
         )
