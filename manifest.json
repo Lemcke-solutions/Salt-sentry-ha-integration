@@ -2,7 +2,7 @@
   "domain": "salt_sentry",
   "name": "Salt Sentry",
   "version": "0.1.0",
-  "documentation": "https://github.com/Lemcke-solutions/salt_sentry_ha_integration",
+  "documentation": "https://github.com/Lemcke-solutions/Salt-sentry-ha-integration",
   "requirements": [],
   "codeowners": [
     "@Lemcke-solutions"
