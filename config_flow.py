@@ -1,8 +1,8 @@
-import aiohttp
 import voluptuous as vol
 from homeassistant import config_entries
 from homeassistant.core import callback
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
+from pysaltsentry import SaltSentryDevice, SaltSentryError
 from .const import *
 
 MANUFACTURER = "Lemcke Solutions"
@@ -52,14 +52,8 @@ class SaltSentryConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         if user_input is not None:
             host = user_input[CONF_HOST]
             try:
-                session = async_get_clientsession(self.hass)
-                async with session.get(
-                    f"http://{host}/status",
-                    timeout=aiohttp.ClientTimeout(total=10),
-                ) as resp:
-                    resp.raise_for_status()
-                    await resp.json()
-            except Exception:
+                await SaltSentryDevice(host, async_get_clientsession(self.hass)).get_status()
+            except SaltSentryError:
                 errors["base"] = "cannot_connect"
 
             if not errors:
@@ -127,14 +121,8 @@ class SaltSentryConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         if user_input is not None:
             host = user_input[CONF_HOST]
             try:
-                session = async_get_clientsession(self.hass)
-                async with session.get(
-                    f"http://{host}/status",
-                    timeout=aiohttp.ClientTimeout(total=10),
-                ) as resp:
-                    resp.raise_for_status()
-                    await resp.json()
-            except Exception:
+                await SaltSentryDevice(host, async_get_clientsession(self.hass)).get_status()
+            except SaltSentryError:
                 errors["base"] = "cannot_connect"
 
             if not errors:

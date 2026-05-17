@@ -5,6 +5,7 @@ from homeassistant.helpers.event import async_track_time_interval
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 import aiohttp
 import logging
+from pysaltsentry import SaltSentryDevice, SaltSentryConnectionError
 from .const import *
 
 _LOGGER = logging.getLogger(__name__)
@@ -95,32 +96,19 @@ class SaltSentryUpdateEntity(CoordinatorEntity, UpdateEntity):
             _LOGGER.warning("Kon GitHub release niet ophalen: %s", err)
 
     async def async_install(self, version, backup, **kwargs):
-        """Download firmware van GitHub en push naar apparaat via /update."""
         if not self._download_url:
             raise Exception("Geen download URL beschikbaar")
 
         config = {**self.entry.data, **self.entry.options}
         host = config[CONF_HOST]
-
         session = async_get_clientsession(self.hass)
 
-        # Download de .bin van GitHub
         async with session.get(self._download_url) as resp:
             resp.raise_for_status()
             firmware_data = await resp.read()
 
-        # Push naar het apparaat
-        upload_url = f"http://{host}/update"
-        data = aiohttp.FormData()
-        data.add_field("firmware", firmware_data,
-                       filename="firmware.bin",
-                       content_type="application/octet-stream")
-
-        async with session.post(upload_url, data=data) as resp:
-            if resp.status != 200:
-                raise Exception(f"OTA mislukt, status: {resp.status}")
+        device = SaltSentryDevice(host, session)
+        await device.install_firmware(firmware_data)
 
         _LOGGER.info("Firmware update succesvol naar %s", host)
-
-        # Versie opnieuw ophalen na update
         await self._fetch_latest_release()

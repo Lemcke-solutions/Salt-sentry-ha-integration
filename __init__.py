@@ -1,11 +1,11 @@
 from datetime import timedelta
 import logging
-import aiohttp
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
+from pysaltsentry import SaltSentryDevice, SaltSentryConnectionError, SaltSentryInvalidDataError
 
 from .const import *
 
@@ -14,44 +14,25 @@ _LOGGER = logging.getLogger(__name__)
 
 
 async def async_setup(hass: HomeAssistant, config: dict):
-    """Set up Salt Sentry (YAML not supported)."""
     return True
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
-    """Set up Salt Sentry from a config entry."""
     config = {**entry.data, **entry.options}
-
-    session = async_get_clientsession(hass)
+    device = SaltSentryDevice(config[CONF_HOST], async_get_clientsession(hass))
 
     async def async_update_data():
-        """Fetch data from the Salt Sentry device."""
-        url = f"http://{config[CONF_HOST]}/status"
         try:
-            async with session.get(url) as resp:
-                resp.raise_for_status()
-                data = await resp.json()
-        except aiohttp.ClientError as err:
+            status = await device.get_status()
+        except SaltSentryConnectionError as err:
             raise UpdateFailed(f"Error communicating with device: {err}") from err
-
-        if not data.get("valid", False):
-            raise UpdateFailed("Device returned invalid measurement")
-
-        unique_id = data.get("unique_id")
-        if not unique_id:
-            raise UpdateFailed("Device did not return a unique_id")
-
-        distance_mm = data.get("distance_mm")
-        if distance_mm is None:
-            raise UpdateFailed("Device did not return a distance measurement")
-
-        measurement_cm = distance_mm / 10
-
+        except SaltSentryInvalidDataError as err:
+            raise UpdateFailed(f"Invalid data from device: {err}") from err
         return {
-            "measurement": measurement_cm,
-            "unique_id": unique_id,
-            "firmware_version": data.get("firmware_version", "unknown"),
-            "hardware_revision": data.get("hardware_revision", "A"),
+            "measurement": status.measurement_cm,
+            "unique_id": status.unique_id,
+            "firmware_version": status.firmware_version,
+            "hardware_revision": status.hardware_revision,
         }
 
     coordinator = DataUpdateCoordinator(

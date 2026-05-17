@@ -3,7 +3,7 @@
   "name": "Salt Sentry",
   "version": "0.1.0",
   "documentation": "https://github.com/Lemcke-solutions/Salt-sentry-ha-integration",
-  "requirements": [],
+  "requirements": ["pysaltsentry==0.1.0"],
   "codeowners": [
     "@Lemcke-solutions"
   ],
