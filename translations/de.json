@@ -1,0 +1,55 @@
+{
+  "config": {
+    "step": {
+      "zeroconf_confirm": {
+        "title": "Salt Sentry gefunden",
+        "description": "{name} Salt Sentry wurde unter {host} gefunden. Möchten Sie dieses Gerät hinzufügen?"
+      },
+      "user": {
+        "title": "Salt Sentry einrichten",
+        "description": "Wählen Sie Ihren Wasserenthärter aus der Liste. Wählen Sie 'Sonstige', wenn Ihr Modell nicht aufgeführt ist, und konfigurieren Sie die Abstände manuell.",
+        "data": {
+          "host": "IP-Adresse",
+          "unit": "Einheit",
+          "softener_type": "Wasserenthärter"
+        }
+      },
+      "distances": {
+        "title": "Abstände festlegen",
+        "description": "Einstellungen für {model}. Ein kleiner Abstand bedeutet einen vollen Behälter (viel Salz), ein großer Abstand bedeutet einen leeren Behälter.",
+        "data": {
+          "full_distance": "Abstand bei vollem Behälter",
+          "empty_distance": "Abstand bei leerem Behälter",
+          "scan_interval": "Aktualisierungsintervall (Minuten)"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Verbindung fehlgeschlagen",
+      "invalid_host": "Ungültige IP-Adresse",
+      "unknown": "Unerwarteter Fehler aufgetreten",
+      "error_full_gt_empty": "Der Abstand bei vollem Behälter muss kleiner sein als bei leerem Behälter"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Salt Sentry anpassen",
+        "description": "Aktualisieren Sie Ihre Wasserenthärter-Einstellungen.",
+        "data": {
+          "unit": "Einheit",
+          "softener_type": "Wasserenthärter"
+        }
+      },
+      "distances": {
+        "title": "Abstände anpassen",
+        "description": "Einstellungen für {model}. Ein kleiner Abstand bedeutet einen vollen Behälter, ein großer Abstand bedeutet einen leeren Behälter.",
+        "data": {
+          "full_distance": "Abstand bei vollem Behälter",
+          "empty_distance": "Abstand bei leerem Behälter",
+          "scan_interval": "Aktualisierungsintervall (Minuten)"
+        }
+      }
+    }
+  }
+}

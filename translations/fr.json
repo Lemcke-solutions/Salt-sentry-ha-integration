@@ -1,0 +1,55 @@
+{
+  "config": {
+    "step": {
+      "zeroconf_confirm": {
+        "title": "Salt Sentry trouvé",
+        "description": "{name} Salt Sentry trouvé à {host}. Voulez-vous ajouter cet appareil ?"
+      },
+      "user": {
+        "title": "Configurer Salt Sentry",
+        "description": "Sélectionnez votre adoucisseur d'eau dans la liste. Choisissez 'Autre' si votre modèle n'est pas répertorié et configurez les distances manuellement.",
+        "data": {
+          "host": "Adresse IP",
+          "unit": "Unité",
+          "softener_type": "Adoucisseur d'eau"
+        }
+      },
+      "distances": {
+        "title": "Définir les distances",
+        "description": "Paramètres pour {model}. Une petite distance signifie un réservoir plein (beaucoup de sel), une grande distance signifie un réservoir vide.",
+        "data": {
+          "full_distance": "Distance quand le réservoir est plein",
+          "empty_distance": "Distance quand le réservoir est vide",
+          "scan_interval": "Intervalle de mise à jour (minutes)"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Échec de la connexion",
+      "invalid_host": "Adresse IP invalide",
+      "unknown": "Une erreur inattendue s'est produite",
+      "error_full_gt_empty": "La distance à plein doit être inférieure à la distance à vide"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Ajuster Salt Sentry",
+        "description": "Mettez à jour les paramètres de votre adoucisseur d'eau.",
+        "data": {
+          "unit": "Unité",
+          "softener_type": "Adoucisseur d'eau"
+        }
+      },
+      "distances": {
+        "title": "Ajuster les distances",
+        "description": "Paramètres pour {model}. Une petite distance signifie un réservoir plein, une grande distance signifie un réservoir vide.",
+        "data": {
+          "full_distance": "Distance quand le réservoir est plein",
+          "empty_distance": "Distance quand le réservoir est vide",
+          "scan_interval": "Intervalle de mise à jour (minutes)"
+        }
+      }
+    }
+  }
+}

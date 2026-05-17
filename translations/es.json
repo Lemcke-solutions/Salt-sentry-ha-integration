@@ -1,0 +1,55 @@
+{
+  "config": {
+    "step": {
+      "zeroconf_confirm": {
+        "title": "Salt Sentry encontrado",
+        "description": "{name} Salt Sentry encontrado en {host}. ¿Desea agregar este dispositivo?"
+      },
+      "user": {
+        "title": "Configurar Salt Sentry",
+        "description": "Seleccione su descalcificador de agua de la lista. Elija 'Otro' si su modelo no está en la lista y configure las distancias manualmente.",
+        "data": {
+          "host": "Dirección IP",
+          "unit": "Unidad",
+          "softener_type": "Descalcificador de agua"
+        }
+      },
+      "distances": {
+        "title": "Establecer distancias",
+        "description": "Configuración para {model}. Una distancia pequeña significa un depósito lleno (mucha sal), una distancia grande significa un depósito vacío.",
+        "data": {
+          "full_distance": "Distancia cuando el depósito está lleno",
+          "empty_distance": "Distancia cuando el depósito está vacío",
+          "scan_interval": "Intervalo de actualización (minutos)"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Error de conexión",
+      "invalid_host": "Dirección IP no válida",
+      "unknown": "Se ha producido un error inesperado",
+      "error_full_gt_empty": "La distancia de lleno debe ser menor que la distancia de vacío"
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Ajustar Salt Sentry",
+        "description": "Actualice la configuración de su descalcificador de agua.",
+        "data": {
+          "unit": "Unidad",
+          "softener_type": "Descalcificador de agua"
+        }
+      },
+      "distances": {
+        "title": "Ajustar distancias",
+        "description": "Configuración para {model}. Una distancia pequeña significa un depósito lleno, una distancia grande significa un depósito vacío.",
+        "data": {
+          "full_distance": "Distancia cuando el depósito está lleno",
+          "empty_distance": "Distancia cuando el depósito está vacío",
+          "scan_interval": "Intervalo de actualización (minutos)"
+        }
+      }
+    }
+  }
+}
