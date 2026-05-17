@@ -2,10 +2,10 @@
   "domain": "salt_sentry",
   "name": "Salt Sentry",
   "version": "0.1.0",
-  "documentation": "https://github.com/eriknl1982/salt_sentry_ha_integration",
+  "documentation": "https://github.com/Lemcke-solutions/salt_sentry_ha_integration",
   "requirements": [],
   "codeowners": [
-    "@eriknl1982"
+    "@Lemcke-solutions"
   ],
   "config_flow": true,
   "iot_class": "local_polling",
