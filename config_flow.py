@@ -1,6 +1,8 @@
+import aiohttp
 import voluptuous as vol
 from homeassistant import config_entries
 from homeassistant.core import callback
+from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from .const import *
 
 MANUFACTURER = "Lemcke Solutions"
@@ -44,14 +46,28 @@ class SaltSentryConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         )
 
     async def async_step_user(self, user_input=None):
-        if user_input is not None:
-            self._host = user_input[CONF_HOST]
-            self._unit = user_input[CONF_UNIT]
-            self._softeners = await async_load_softeners(self.hass)
-            self._softener_type = user_input["softener_type"]
-            return await self.async_step_distances()
-
+        errors = {}
         softeners = await async_load_softeners(self.hass)
+
+        if user_input is not None:
+            host = user_input[CONF_HOST]
+            try:
+                session = async_get_clientsession(self.hass)
+                async with session.get(
+                    f"http://{host}/status",
+                    timeout=aiohttp.ClientTimeout(total=10),
+                ) as resp:
+                    resp.raise_for_status()
+                    await resp.json()
+            except Exception:
+                errors["base"] = "cannot_connect"
+
+            if not errors:
+                self._host = host
+                self._unit = user_input[CONF_UNIT]
+                self._softeners = softeners
+                self._softener_type = user_input["softener_type"]
+                return await self.async_step_distances()
 
         return self.async_show_form(
             step_id="user",
@@ -62,6 +78,7 @@ class SaltSentryConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     k: v["name"] for k, v in softeners.items()
                 }),
             }),
+            errors=errors,
         )
 
     async def async_step_distances(self, user_input=None):
@@ -101,6 +118,37 @@ class SaltSentryConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             description_placeholders={
                 "model": self._softeners[self._softener_type]["name"]
             },
+        )
+
+    async def async_step_reconfigure(self, user_input=None):
+        errors = {}
+        reconfigure_entry = self._get_reconfigure_entry()
+
+        if user_input is not None:
+            host = user_input[CONF_HOST]
+            try:
+                session = async_get_clientsession(self.hass)
+                async with session.get(
+                    f"http://{host}/status",
+                    timeout=aiohttp.ClientTimeout(total=10),
+                ) as resp:
+                    resp.raise_for_status()
+                    await resp.json()
+            except Exception:
+                errors["base"] = "cannot_connect"
+
+            if not errors:
+                return self.async_update_reload_and_abort(
+                    reconfigure_entry,
+                    data_updates={CONF_HOST: host},
+                )
+
+        return self.async_show_form(
+            step_id="reconfigure",
+            data_schema=vol.Schema({
+                vol.Required(CONF_HOST, default=reconfigure_entry.data.get(CONF_HOST, "")): str,
+            }),
+            errors=errors,
         )
 
     @staticmethod

@@ -20,7 +20,6 @@ async def async_setup(hass: HomeAssistant, config: dict):
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
     """Set up Salt Sentry from a config entry."""
-    hass.data.setdefault(DOMAIN, {})
     config = {**entry.data, **entry.options}
 
     session = async_get_clientsession(hass)
@@ -66,7 +65,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
     # Eerste fetch
     await coordinator.async_config_entry_first_refresh()
 
-    hass.data[DOMAIN][entry.entry_id] = coordinator
+    entry.runtime_data = coordinator
 
     # Forward naar platforms
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
@@ -84,6 +83,4 @@ async def update_listener(hass: HomeAssistant, entry: ConfigEntry):
 
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry):
     """Unload a config entry."""
-    if DOMAIN in hass.data:
-        hass.data[DOMAIN].pop(entry.entry_id, None)
     return await hass.config_entries.async_unload_platforms(entry, PLATFORMS)

@@ -22,7 +22,17 @@
           "empty_distance": "Abstand bei leerem Behälter",
           "scan_interval": "Aktualisierungsintervall (Minuten)"
         }
+      },
+      "reconfigure": {
+        "title": "Salt Sentry neu konfigurieren",
+        "description": "Aktualisieren Sie die IP-Adresse Ihres Salt Sentry Geräts.",
+        "data": {
+          "host": "IP-Adresse"
+        }
       }
+    },
+    "abort": {
+      "reconfigure_successful": "IP-Adresse erfolgreich aktualisiert"
     },
     "error": {
       "cannot_connect": "Verbindung fehlgeschlagen",
@@ -50,6 +60,17 @@
           "scan_interval": "Aktualisierungsintervall (Minuten)"
         }
       }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "raw_distance": {"name": "Rohdistanz"},
+      "distance": {"name": "Distanz"},
+      "salt_level": {"name": "Salzstand"},
+      "hardware_revision": {"name": "Hardwarerevision"}
+    },
+    "update": {
+      "firmware": {"name": "Firmware"}
     }
   }
 }

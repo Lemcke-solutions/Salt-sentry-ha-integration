@@ -22,7 +22,17 @@
           "empty_distance": "Distancia cuando el depósito está vacío",
           "scan_interval": "Intervalo de actualización (minutos)"
         }
+      },
+      "reconfigure": {
+        "title": "Reconfigurar Salt Sentry",
+        "description": "Actualice la dirección IP de su dispositivo Salt Sentry.",
+        "data": {
+          "host": "Dirección IP"
+        }
       }
+    },
+    "abort": {
+      "reconfigure_successful": "Dirección IP actualizada correctamente"
     },
     "error": {
       "cannot_connect": "Error de conexión",
@@ -50,6 +60,17 @@
           "scan_interval": "Intervalo de actualización (minutos)"
         }
       }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "raw_distance": {"name": "Distancia bruta"},
+      "distance": {"name": "Distancia"},
+      "salt_level": {"name": "Nivel de sal"},
+      "hardware_revision": {"name": "Revisión de hardware"}
+    },
+    "update": {
+      "firmware": {"name": "Firmware"}
     }
   }
 }

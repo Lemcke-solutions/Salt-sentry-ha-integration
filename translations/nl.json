@@ -22,7 +22,17 @@
           "empty_distance": "Afstand bij lege tank",
           "scan_interval": "Update-interval (minuten)"
         }
+      },
+      "reconfigure": {
+        "title": "Salt Sentry opnieuw configureren",
+        "description": "Werk het IP-adres van je Salt Sentry apparaat bij.",
+        "data": {
+          "host": "IP-adres"
+        }
       }
+    },
+    "abort": {
+      "reconfigure_successful": "IP-adres succesvol bijgewerkt"
     },
     "error": {
       "cannot_connect": "Kan geen verbinding maken",
@@ -50,6 +60,17 @@
           "scan_interval": "Update-interval (minuten)"
         }
       }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "raw_distance": {"name": "Ruwe afstand"},
+      "distance": {"name": "Afstand"},
+      "salt_level": {"name": "Zoutniveau"},
+      "hardware_revision": {"name": "Hardwareversie"}
+    },
+    "update": {
+      "firmware": {"name": "Firmware"}
     }
   }
 }

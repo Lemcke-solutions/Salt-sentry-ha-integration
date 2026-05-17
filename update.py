@@ -9,6 +9,8 @@ from .const import *
 
 _LOGGER = logging.getLogger(__name__)
 
+PARALLEL_UPDATES = 0
+
 GITHUB_RELEASES_URL = {
     "A": "https://api.github.com/repos/Lemcke-solutions/saltSentryFirmware/releases/latest",
     "B": "https://api.github.com/repos/Lemcke-solutions/saltSentryFirmware_rev2/releases/latest",
@@ -17,12 +19,14 @@ GITHUB_CHECK_INTERVAL = timedelta(hours=6)
 
 
 async def async_setup_entry(hass, entry, async_add_entities):
-    coordinator = hass.data[DOMAIN][entry.entry_id]
+    coordinator = entry.runtime_data
     async_add_entities([SaltSentryUpdateEntity(coordinator, entry)])
 
 
 class SaltSentryUpdateEntity(CoordinatorEntity, UpdateEntity):
 
+    _attr_has_entity_name = True
+    _attr_translation_key = "firmware"
     _attr_supported_features = (
         UpdateEntityFeature.INSTALL | UpdateEntityFeature.RELEASE_NOTES
     )
@@ -32,7 +36,6 @@ class SaltSentryUpdateEntity(CoordinatorEntity, UpdateEntity):
         self.entry = entry
         device_id = coordinator.data.get("unique_id")
         self._attr_unique_id = f"{device_id}_update"
-        self._attr_name = f"Salt Sentry {device_id[-4:]} Firmware"
         self._latest_version = None
         self._release_notes = None
         self._download_url = None
