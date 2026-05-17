@@ -1,3 +1,6 @@
 .DS_Store
 CLAUDE.md
 deploy.sh
+__pycache__/
+*.pyc
+.pytest_cache/
