@@ -1,4 +1,4 @@
-from homeassistant.components.sensor import SensorDeviceClass, SensorEntity
+from homeassistant.components.sensor import SensorDeviceClass, SensorEntity, SensorStateClass
 from homeassistant.const import UnitOfLength
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from homeassistant.helpers.device_registry import DeviceInfo
@@ -62,6 +62,7 @@ class SaltRawDistanceSensor(SaltBaseSensor):
     _attr_entity_registry_enabled_default = False
     _attr_translation_key = "raw_distance"
     _attr_device_class = SensorDeviceClass.DISTANCE
+    _attr_state_class = SensorStateClass.MEASUREMENT
     _attr_suggested_display_precision = 1
 
     def __init__(self, coordinator, entry):
@@ -76,6 +77,7 @@ class SaltRawDistanceSensor(SaltBaseSensor):
 class SaltDistanceSensor(SaltBaseSensor):
     _attr_translation_key = "distance"
     _attr_device_class = SensorDeviceClass.DISTANCE
+    _attr_state_class = SensorStateClass.MEASUREMENT
     _attr_suggested_display_precision = 1
 
     def __init__(self, coordinator, entry):
@@ -89,6 +91,7 @@ class SaltDistanceSensor(SaltBaseSensor):
 
 class SaltPercentageSensor(SaltBaseSensor):
     _attr_translation_key = "salt_level"
+    _attr_state_class = SensorStateClass.MEASUREMENT
 
     def __init__(self, coordinator, entry):
         super().__init__(coordinator, entry)
