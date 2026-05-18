@@ -43,7 +43,7 @@ class SaltSentryConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         device_id: str | None = discovery_info.properties.get("id")
 
         await self.async_set_unique_id(device_id)
-        self._abort_if_unique_id_configured(updates={CONF_HOST: host})
+        self._abort_if_unique_id_configured(updates={CONF_HOST: host}, reload_on_update=True)
 
         self._host = host
         self.context["title_placeholders"] = {"host": host, "name": MANUFACTURER}
@@ -70,7 +70,9 @@ class SaltSentryConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         if user_input is not None:
             host: str = user_input[CONF_HOST]
             try:
-                await SaltSentryDevice(host, async_get_clientsession(self.hass)).get_status()
+                status = await SaltSentryDevice(host, async_get_clientsession(self.hass)).get_status()
+                await self.async_set_unique_id(status.unique_id)
+                self._abort_if_unique_id_configured()
             except SaltSentryError:
                 errors["base"] = "cannot_connect"
 

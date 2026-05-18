@@ -7,6 +7,7 @@ from typing import Any
 import aiohttp
 
 from homeassistant.components.update import UpdateEntity, UpdateEntityFeature
+from homeassistant.exceptions import HomeAssistantError
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
@@ -101,7 +102,7 @@ class SaltSentryUpdateEntity(CoordinatorEntity[DataUpdateCoordinator[dict[str, A
 
     async def async_install(self, version: str | None, backup: bool, **kwargs: Any) -> None:
         if not self._download_url:
-            raise RuntimeError("No download URL available")
+            raise HomeAssistantError("No download URL available")
 
         config: dict[str, Any] = {**self.entry.data, **self.entry.options}
         host: str = config[CONF_HOST]
