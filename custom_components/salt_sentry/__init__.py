@@ -1,3 +1,4 @@
+"""Salt Sentry integration."""
 from datetime import timedelta
 import logging
 from typing import Any
@@ -15,10 +16,12 @@ _LOGGER = logging.getLogger(__name__)
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
+    """Set up Salt Sentry from a config entry."""
     config: dict[str, Any] = {**entry.data, **entry.options}
     device = SaltSentryDevice(config[CONF_HOST], async_get_clientsession(hass))
 
     async def async_update_data() -> dict[str, Any]:
+        """Fetch data from the Salt Sentry device."""
         try:
             status = await device.get_status()
         except SaltSentryConnectionError as err:
@@ -51,8 +54,10 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
 
 async def update_listener(hass: HomeAssistant, entry: ConfigEntry) -> None:
+    """Reload the config entry when options are updated."""
     await hass.config_entries.async_reload(entry.entry_id)
 
 
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
+    """Unload a config entry."""
     return await hass.config_entries.async_unload_platforms(entry, PLATFORMS)

@@ -1,15 +1,14 @@
+"""Salt Sentry firmware update platform."""
 from __future__ import annotations
 
 import logging
 from datetime import datetime, timedelta
 from typing import Any
 
-import aiohttp
-
 from homeassistant.components.update import UpdateEntity, UpdateEntityFeature
-from homeassistant.exceptions import HomeAssistantError
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
+from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
@@ -35,11 +34,13 @@ async def async_setup_entry(
     entry: ConfigEntry,
     async_add_entities: AddEntitiesCallback,
 ) -> None:
+    """Set up the Salt Sentry firmware update entity."""
     coordinator: DataUpdateCoordinator[dict[str, Any]] = entry.runtime_data
     async_add_entities([SaltSentryUpdateEntity(coordinator, entry)])
 
 
 class SaltSentryUpdateEntity(CoordinatorEntity[DataUpdateCoordinator[dict[str, Any]]], UpdateEntity):
+    """Entity that manages firmware updates for the Salt Sentry device."""
 
     _attr_has_entity_name = True
     _attr_translation_key = "firmware"
@@ -50,6 +51,7 @@ class SaltSentryUpdateEntity(CoordinatorEntity[DataUpdateCoordinator[dict[str, A
         coordinator: DataUpdateCoordinator[dict[str, Any]],
         entry: ConfigEntry,
     ) -> None:
+        """Initialize the firmware update entity."""
         super().__init__(coordinator)
         self.entry = entry
         self._attr_unique_id = f"{coordinator.data['unique_id']}_update"
@@ -59,20 +61,25 @@ class SaltSentryUpdateEntity(CoordinatorEntity[DataUpdateCoordinator[dict[str, A
 
     @property
     def device_info(self) -> DeviceInfo:
+        """Return device information."""
         return DeviceInfo(identifiers={(DOMAIN, self.coordinator.data["unique_id"])})
 
     @property
     def installed_version(self) -> str | None:
+        """Return the currently installed firmware version."""
         return self.coordinator.data.get("firmware_version")
 
     @property
     def latest_version(self) -> str | None:
+        """Return the latest available firmware version."""
         return self._latest_version
 
     async def async_release_notes(self) -> str | None:
+        """Return the release notes for the latest firmware version."""
         return self._release_notes
 
     async def async_added_to_hass(self) -> None:
+        """Fetch the latest release on startup and schedule periodic checks."""
         await super().async_added_to_hass()
         await self._fetch_latest_release()
         self.async_on_remove(
@@ -80,9 +87,11 @@ class SaltSentryUpdateEntity(CoordinatorEntity[DataUpdateCoordinator[dict[str, A
         )
 
     async def _scheduled_fetch(self, _now: datetime) -> None:
+        """Fetch the latest release on a scheduled interval."""
         await self._fetch_latest_release()
 
     async def _fetch_latest_release(self) -> None:
+        """Fetch the latest firmware release from GitHub."""
         hardware_revision: str = self.coordinator.data.get("hardware_revision", "A")
         url = GITHUB_RELEASES_URL.get(hardware_revision, GITHUB_RELEASES_URL["A"])
         session = async_get_clientsession(self.hass)
@@ -101,6 +110,7 @@ class SaltSentryUpdateEntity(CoordinatorEntity[DataUpdateCoordinator[dict[str, A
             _LOGGER.warning("Could not fetch GitHub release: %s", err)
 
     async def async_install(self, version: str | None, backup: bool, **kwargs: Any) -> None:
+        """Download firmware from GitHub and install it on the device."""
         if not self._download_url:
             raise HomeAssistantError("No download URL available")
 

@@ -1,3 +1,4 @@
+"""Constants for the Salt Sentry integration."""
 import json
 from typing import Any
 
@@ -22,16 +23,19 @@ SOFTENER_FILE = "softeners.json"
 
 
 def _load_softeners_sync(path: str) -> dict[str, Any]:
+    """Load the softeners JSON file synchronously."""
     with open(path) as f:
         return json.load(f)
 
 
 async def async_load_softeners(hass: HomeAssistant) -> dict[str, Any]:
+    """Load the softeners preset file asynchronously."""
     path = hass.config.path(f"custom_components/{DOMAIN}/{SOFTENER_FILE}")
     return await hass.async_add_executor_job(_load_softeners_sync, path)
 
 
 def cm_to_unit(value_cm: float | None, unit: str) -> float | None:
+    """Convert a centimeter value to the given unit."""
     if value_cm is None:
         return None
     if unit == UNIT_INCH:

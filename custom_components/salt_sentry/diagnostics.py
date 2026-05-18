@@ -1,3 +1,4 @@
+"""Diagnostics support for Salt Sentry."""
 from __future__ import annotations
 
 from typing import Any
@@ -12,6 +13,7 @@ REDACT_KEYS: set[str] = set()
 async def async_get_config_entry_diagnostics(
     hass: HomeAssistant, entry: ConfigEntry
 ) -> dict[str, Any]:
+    """Return diagnostics for a config entry."""
     coordinator = entry.runtime_data
     return {
         "config": async_redact_data(dict(entry.data) | dict(entry.options), REDACT_KEYS),
