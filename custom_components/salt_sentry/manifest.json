@@ -1,7 +1,7 @@
 {
   "domain": "salt_sentry",
   "name": "Salt Sentry",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "documentation": "https://github.com/Lemcke-solutions/Salt-sentry-ha-integration",
   "requirements": ["pysaltsentry==0.1.0"],
   "codeowners": [
