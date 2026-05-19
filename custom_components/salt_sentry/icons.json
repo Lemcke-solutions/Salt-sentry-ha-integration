@@ -1,8 +1,6 @@
 {
   "entity": {
     "sensor": {
-      "raw_distance": {"default": "mdi:ruler"},
-      "distance": {"default": "mdi:ruler"},
       "salt_level": {"default": "mdi:grain"},
       "hardware_revision": {"default": "mdi:chip"}
     },

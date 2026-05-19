@@ -67,8 +67,8 @@ rules:
     status: exempt
     comment: The integration has no conditions that require user intervention via a repair flow.
   stale-devices:
-    status: exempt
-    comment: Each config entry represents a single device; there are no stale devices to remove.
+    status: done
+    comment: async_remove_config_entry_device is implemented to allow manual device removal from the device registry.
 
   # Platinum
   async-dependency: done

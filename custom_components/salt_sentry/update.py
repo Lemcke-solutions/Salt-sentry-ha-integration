@@ -6,17 +6,17 @@ from datetime import datetime, timedelta
 from typing import Any
 
 from homeassistant.components.update import UpdateEntity, UpdateEntityFeature
-from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import HomeAssistantError
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.event import async_track_time_interval
-from homeassistant.helpers.update_coordinator import CoordinatorEntity, DataUpdateCoordinator
+from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from pysaltsentry import SaltSentryDevice
 
 from .const import CONF_HOST, DOMAIN
+from .coordinator import SaltSentryConfigEntry, SaltSentryCoordinator
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -31,15 +31,15 @@ GITHUB_CHECK_INTERVAL = timedelta(hours=6)
 
 async def async_setup_entry(
     hass: HomeAssistant,
-    entry: ConfigEntry,
+    entry: SaltSentryConfigEntry,
     async_add_entities: AddEntitiesCallback,
 ) -> None:
     """Set up the Salt Sentry firmware update entity."""
-    coordinator: DataUpdateCoordinator[dict[str, Any]] = entry.runtime_data
+    coordinator: SaltSentryCoordinator = entry.runtime_data
     async_add_entities([SaltSentryUpdateEntity(coordinator, entry)])
 
 
-class SaltSentryUpdateEntity(CoordinatorEntity[DataUpdateCoordinator[dict[str, Any]]], UpdateEntity):
+class SaltSentryUpdateEntity(CoordinatorEntity[SaltSentryCoordinator], UpdateEntity):
     """Entity that manages firmware updates for the Salt Sentry device."""
 
     _attr_has_entity_name = True
@@ -48,8 +48,8 @@ class SaltSentryUpdateEntity(CoordinatorEntity[DataUpdateCoordinator[dict[str, A
 
     def __init__(
         self,
-        coordinator: DataUpdateCoordinator[dict[str, Any]],
-        entry: ConfigEntry,
+        coordinator: SaltSentryCoordinator,
+        entry: SaltSentryConfigEntry,
     ) -> None:
         """Initialize the firmware update entity."""
         super().__init__(coordinator)

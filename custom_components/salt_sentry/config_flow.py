@@ -11,6 +11,8 @@ from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from pysaltsentry import SaltSentryDevice, SaltSentryError
 
+from .coordinator import SaltSentryConfigEntry
+
 from .const import (
     CONF_CORRECTION,
     CONF_EMPTY,
@@ -171,14 +173,15 @@ class SaltSentryConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
     @staticmethod
     @callback
-    def async_get_options_flow(config_entry: config_entries.ConfigEntry) -> SaltSentryOptionsFlow:
+    def async_get_options_flow(config_entry: SaltSentryConfigEntry) -> SaltSentryOptionsFlow:
+        """Return the options flow handler."""
         return SaltSentryOptionsFlow(config_entry)
 
 
 class SaltSentryOptionsFlow(config_entries.OptionsFlow):
     """Handle the options flow for Salt Sentry."""
 
-    def __init__(self, config_entry: config_entries.ConfigEntry) -> None:
+    def __init__(self, config_entry: SaltSentryConfigEntry) -> None:
         """Initialize the options flow."""
         self._config_entry = config_entry
         self._unit: str = UNIT_CM
