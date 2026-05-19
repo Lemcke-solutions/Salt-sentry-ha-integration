@@ -5,6 +5,8 @@ from typing import Any
 
 import voluptuous as vol
 from homeassistant import config_entries
+from homeassistant.components.zeroconf import ZeroconfServiceInfo
+from homeassistant.config_entries import ConfigFlowResult
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.aiohttp_client import async_get_clientsession
 from pysaltsentry import SaltSentryDevice, SaltSentryError
@@ -40,8 +42,8 @@ class SaltSentryConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         self._softeners: dict[str, Any] = {}
 
     async def async_step_zeroconf(
-        self, discovery_info: config_entries.ZeroconfServiceInfo
-    ) -> config_entries.FlowResult:
+        self, discovery_info: ZeroconfServiceInfo
+    ) -> ConfigFlowResult:
         """Handle a device discovered via zeroconf."""
         host: str = discovery_info.host
         device_id: str | None = discovery_info.properties.get("id")
@@ -56,7 +58,7 @@ class SaltSentryConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
     async def async_step_zeroconf_confirm(
         self, user_input: dict[str, Any] | None = None
-    ) -> config_entries.FlowResult:
+    ) -> ConfigFlowResult:
         """Ask the user to confirm a zeroconf-discovered device."""
         if user_input is not None:
             return await self.async_step_user()
@@ -68,7 +70,7 @@ class SaltSentryConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
     async def async_step_user(
         self, user_input: dict[str, Any] | None = None
-    ) -> config_entries.FlowResult:
+    ) -> ConfigFlowResult:
         """Handle the initial user setup step."""
         errors: dict[str, str] = {}
         softeners = await async_load_softeners(self.hass)
@@ -101,7 +103,7 @@ class SaltSentryConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
     async def async_step_distances(
         self, user_input: dict[str, Any] | None = None
-    ) -> config_entries.FlowResult:
+    ) -> ConfigFlowResult:
         """Handle the distance configuration step."""
         errors: dict[str, str] = {}
         preset = self._softeners[self._softener_type]
@@ -141,7 +143,7 @@ class SaltSentryConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
     async def async_step_reconfigure(
         self, user_input: dict[str, Any] | None = None
-    ) -> config_entries.FlowResult:
+    ) -> ConfigFlowResult:
         """Handle reconfiguration of the device IP address."""
         errors: dict[str, str] = {}
         reconfigure_entry = self._get_reconfigure_entry()
@@ -184,7 +186,7 @@ class SaltSentryOptionsFlow(config_entries.OptionsFlow):
 
     async def async_step_init(
         self, user_input: dict[str, Any] | None = None
-    ) -> config_entries.FlowResult:
+    ) -> ConfigFlowResult:
         """Handle the initial options step."""
         current: dict[str, Any] = {**self._config_entry.data, **self._config_entry.options}
         softeners = await async_load_softeners(self.hass)
@@ -206,7 +208,7 @@ class SaltSentryOptionsFlow(config_entries.OptionsFlow):
 
     async def async_step_distances(
         self, user_input: dict[str, Any] | None = None
-    ) -> config_entries.FlowResult:
+    ) -> ConfigFlowResult:
         """Handle the distance options step."""
         errors: dict[str, str] = {}
         current: dict[str, Any] = {**self._config_entry.data, **self._config_entry.options}

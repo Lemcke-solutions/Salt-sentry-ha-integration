@@ -1,6 +1,6 @@
 """Constants for the Salt Sentry integration."""
 import json
-from typing import Any
+from typing import Any, cast
 
 from homeassistant.core import HomeAssistant
 
@@ -25,7 +25,7 @@ SOFTENER_FILE = "softeners.json"
 def _load_softeners_sync(path: str) -> dict[str, Any]:
     """Load the softeners JSON file synchronously."""
     with open(path) as f:
-        return json.load(f)
+        return cast(dict[str, Any], json.load(f))
 
 
 async def async_load_softeners(hass: HomeAssistant) -> dict[str, Any]:

@@ -1,14 +1,14 @@
 """Salt Sentry sensor platform."""
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, cast
 
 from homeassistant.components.sensor import SensorDeviceClass, SensorEntity, SensorStateClass
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import UnitOfLength
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.device_registry import DeviceInfo
-from homeassistant.helpers.entity import EntityCategory
+from homeassistant.helpers.entity import EntityCategory  # type: ignore[attr-defined]
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity, DataUpdateCoordinator
 
@@ -47,7 +47,7 @@ class SaltBaseSensor(CoordinatorEntity[DataUpdateCoordinator[dict[str, Any]]], S
 
     def _get_unit(self) -> str:
         """Return the configured display unit."""
-        return self._get_config().get(CONF_UNIT, UNIT_CM)
+        return cast(str, self._get_config().get(CONF_UNIT, UNIT_CM))
 
     def _get_correction_cm(self) -> float:
         """Return the correction value converted to centimeters."""
@@ -59,7 +59,7 @@ class SaltBaseSensor(CoordinatorEntity[DataUpdateCoordinator[dict[str, Any]]], S
 
     def _raw_measurement_cm(self) -> float:
         """Return the raw distance measurement in centimeters."""
-        return self.coordinator.data["measurement"]
+        return cast(float, self.coordinator.data["measurement"])
 
     def _corrected_measurement_cm(self) -> float:
         """Return the corrected distance measurement in centimeters, clamped to zero."""
@@ -72,7 +72,7 @@ class SaltBaseSensor(CoordinatorEntity[DataUpdateCoordinator[dict[str, Any]]], S
         return round(value_cm, 1)
 
     @property
-    def native_unit_of_measurement(self) -> str:
+    def native_unit_of_measurement(self) -> str | None:
         """Return the unit of measurement."""
         return UnitOfLength.INCHES if self._get_unit() == UNIT_INCH else UnitOfLength.CENTIMETERS
 
@@ -165,7 +165,7 @@ class SaltHardwareRevisionSensor(SaltBaseSensor):
     @property
     def native_value(self) -> str:
         """Return the hardware revision."""
-        return self.coordinator.data.get("hardware_revision", "A")
+        return cast(str, self.coordinator.data.get("hardware_revision", "A"))
 
 
 async def async_setup_entry(
