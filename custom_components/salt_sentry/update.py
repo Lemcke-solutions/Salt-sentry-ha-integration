@@ -112,7 +112,10 @@ class SaltSentryUpdateEntity(CoordinatorEntity[DataUpdateCoordinator[dict[str, A
     async def async_install(self, version: str | None, backup: bool, **kwargs: Any) -> None:
         """Download firmware from GitHub and install it on the device."""
         if not self._download_url:
-            raise HomeAssistantError("No download URL available")
+            raise HomeAssistantError(
+                translation_domain=DOMAIN,
+                translation_key="no_download_url",
+            )
 
         config: dict[str, Any] = {**self.entry.data, **self.entry.options}
         host: str = config[CONF_HOST]

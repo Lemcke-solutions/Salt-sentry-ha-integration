@@ -62,6 +62,11 @@
       }
     }
   },
+  "exceptions": {
+    "no_download_url": {
+      "message": "No hay URL de descarga de firmware disponible. Espere la próxima comprobación de versión o reinicie Home Assistant."
+    }
+  },
   "entity": {
     "sensor": {
       "raw_distance": {"name": "Distancia bruta"},

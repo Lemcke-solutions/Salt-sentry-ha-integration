@@ -62,6 +62,11 @@
       }
     }
   },
+  "exceptions": {
+    "no_download_url": {
+      "message": "Keine Firmware-Download-URL verfügbar. Warten Sie auf die nächste Versionsprüfung oder starten Sie Home Assistant neu."
+    }
+  },
   "entity": {
     "sensor": {
       "raw_distance": {"name": "Rohdistanz"},

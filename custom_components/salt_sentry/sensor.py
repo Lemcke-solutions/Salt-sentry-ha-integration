@@ -151,7 +151,6 @@ class SaltHardwareRevisionSensor(SaltBaseSensor):
 
     _attr_entity_category = EntityCategory.DIAGNOSTIC
     _attr_translation_key = "hardware_revision"
-    _attr_icon = "mdi:chip"
 
     def __init__(self, coordinator: DataUpdateCoordinator[dict[str, Any]], entry: ConfigEntry) -> None:
         """Initialize the hardware revision sensor."""
