@@ -1,6 +1,6 @@
 # Salt Sentry — Home Assistant Integration
 
-Integrates the **Salt Sentry** device into Home Assistant. Salt Sentry is an ultrasonic distance sensor (ESP8266/ESP32) that measures the salt level in a water softener tank and exposes it as a percentage via a local HTTP API.
+Integrates the **Salt Sentry** device into Home Assistant. The Salt Sentry is an ultrasonic distance sensor that measures the salt level in a water softener and exposes it as a measurement and percentage via a local HTTP API.
 
 ## Features
 
@@ -19,36 +19,26 @@ Integrates the **Salt Sentry** device into Home Assistant. Salt Sentry is an ult
 - Automate a reminder on the display of a smart home panel when a top-up is needed.
 - Include salt level in a household maintenance dashboard.
 
-## Installation via HACS
-
-1. Open HACS in Home Assistant
-2. Go to **Integrations** → **Custom repositories**
-3. Add `https://github.com/Lemcke-solutions/Salt-sentry-ha-integration` as an **Integration**
-4. Search for **Salt Sentry** and install it
-5. Restart Home Assistant
-
 ## Setup
 
 The device is discovered automatically via Zeroconf when it is on the same network as Home Assistant. You can also add it manually via **Settings → Integrations → Add integration → Salt Sentry**.
 
 During setup you will configure:
-- **IP address** of the device
+- **IP address** of the device (automatically filled in if the device was discovered via zeroconf)
 - **Unit** (cm or inch)
 - **Water softener model** (to prefill the distances)
 - **Distance when full** — sensor distance when the salt tank is full
 - **Distance when empty** — sensor distance when the salt tank is empty
 - **Scan interval** — how often HA polls the device (minutes)
 
-A smaller distance means more salt (the sensor is mounted at the top of the tank).
+A smaller distance means more salt (the sensor should be mounted at the top of the tank).
 
 ## Removal
 
 1. Go to **Settings → Integrations**
 2. Find **Salt Sentry** and click the three-dot menu
 3. Select **Delete**
-4. Restart Home Assistant
 
-If installed via HACS, also remove the integration there to clean up the files.
 
 ## Entities
 
@@ -57,7 +47,7 @@ If installed via HACS, also remove the integration there to clean up the files.
 | Salt Level | — | Salt percentage (0–100%) |
 | Salt Distance | — | Corrected distance measurement |
 | Salt Distance raw | Diagnostic | Raw distance from the sensor, without correction (disabled by default) |
-| Hardware Revision | Diagnostic | Hardware revision of the device (A = ESP8266, B = ESP32) |
+| Hardware Revision | Diagnostic | Hardware revision of the device |
 | Firmware | — | Update entity for OTA firmware updates |
 
 ## Data updates
@@ -67,6 +57,7 @@ Sensor data is fetched from the device on a configurable polling interval (defau
 ## Supported water softeners
 
 Preset distances are available for the following models. Choose **Other** to enter distances manually.
+If you've found good settings for a device not yet listed, please let me know, so that I can add them
 
 | Model | Distance full | Distance empty |
 |-------|--------------|----------------|
@@ -109,9 +100,8 @@ automation:
 
 ## Known limitations
 
-- Each Salt Sentry device requires its own integration entry; multiple devices need to be added separately.
-- The salt percentage is calculated by linear interpolation between the configured full and empty distances. Non-linear tank shapes will reduce accuracy.
 - The integration uses local polling; there is no push notification from the device.
+- The device is known to give inaccurate readings when using salt crystals. Salt block or pellets work fine.
 - Firmware updates require the device to be reachable on the local network at the time of installation.
 
 ## Troubleshooting
