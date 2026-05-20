@@ -1,15 +1,15 @@
 {
   "domain": "salt_sentry",
   "name": "Salt Sentry",
-  "version": "1.0.0",
-  "documentation": "https://github.com/Lemcke-solutions/Salt-sentry-ha-integration",
-  "issue_tracker": "https://github.com/Lemcke-solutions/Salt-sentry-ha-integration/issues",
-  "requirements": ["pysaltsentry==0.1.2"],
   "codeowners": [
     "@Lemcke-solutions"
   ],
   "config_flow": true,
+  "documentation": "https://github.com/Lemcke-solutions/Salt-sentry-ha-integration",
   "iot_class": "local_polling",
+  "issue_tracker": "https://github.com/Lemcke-solutions/Salt-sentry-ha-integration/issues",
+  "requirements": ["pysaltsentry==0.1.2"],
+  "version": "1.0.0",
   "zeroconf": [
     {
       "type": "_salt_sentry._tcp.local.",
