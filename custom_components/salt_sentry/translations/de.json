@@ -16,7 +16,7 @@
       },
       "distances": {
         "title": "Abstände festlegen",
-        "description": "Einstellungen für {model}. Ein kleiner Abstand bedeutet einen vollen Behälter (viel Salz), ein großer Abstand bedeutet einen leeren Behälter.",
+        "description": "Einstellungen für {model}. Ein kleiner Abstand bedeutet einen vollen Behälter (viel Salz), ein großer Abstand bedeutet einen leeren Behälter.\n\nAktuelle Messung: **{current_measurement}**",
         "data": {
           "full_distance": "Abstand bei vollem Behälter",
           "empty_distance": "Abstand bei leerem Behälter",
@@ -53,7 +53,7 @@
       },
       "distances": {
         "title": "Abstände anpassen",
-        "description": "Einstellungen für {model}. Ein kleiner Abstand bedeutet einen vollen Behälter, ein großer Abstand bedeutet einen leeren Behälter.",
+        "description": "Einstellungen für {model}. Ein kleiner Abstand bedeutet einen vollen Behälter, ein großer Abstand bedeutet einen leeren Behälter.\n\nAktuelle Messung: **{current_measurement}**",
         "data": {
           "full_distance": "Abstand bei vollem Behälter",
           "empty_distance": "Abstand bei leerem Behälter",

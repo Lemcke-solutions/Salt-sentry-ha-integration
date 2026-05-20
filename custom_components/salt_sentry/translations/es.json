@@ -16,7 +16,7 @@
       },
       "distances": {
         "title": "Establecer distancias",
-        "description": "Configuración para {model}. Una distancia pequeña significa un depósito lleno (mucha sal), una distancia grande significa un depósito vacío.",
+        "description": "Configuración para {model}. Una distancia pequeña significa un depósito lleno (mucha sal), una distancia grande significa un depósito vacío.\n\nMedición actual: **{current_measurement}**",
         "data": {
           "full_distance": "Distancia cuando el depósito está lleno",
           "empty_distance": "Distancia cuando el depósito está vacío",
@@ -53,7 +53,7 @@
       },
       "distances": {
         "title": "Ajustar distancias",
-        "description": "Configuración para {model}. Una distancia pequeña significa un depósito lleno, una distancia grande significa un depósito vacío.",
+        "description": "Configuración para {model}. Una distancia pequeña significa un depósito lleno, una distancia grande significa un depósito vacío.\n\nMedición actual: **{current_measurement}**",
         "data": {
           "full_distance": "Distancia cuando el depósito está lleno",
           "empty_distance": "Distancia cuando el depósito está vacío",

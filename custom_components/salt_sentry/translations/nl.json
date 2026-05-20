@@ -16,7 +16,7 @@
       },
       "distances": {
         "title": "Afstanden instellen",
-        "description": "Instellingen voor {model}. Een kleine afstand betekent veel zout (volle tank), een grote afstand betekent weinig zout (lege tank).",
+        "description": "Instellingen voor {model}. Een kleine afstand betekent veel zout (volle tank), een grote afstand betekent weinig zout (lege tank).\n\nHuidige meting: **{current_measurement}**",
         "data": {
           "full_distance": "Afstand bij volle tank",
           "empty_distance": "Afstand bij lege tank",
@@ -53,7 +53,7 @@
       },
       "distances": {
         "title": "Afstanden aanpassen",
-        "description": "Instellingen voor {model}. Een kleine afstand betekent veel zout, een grote afstand betekent weinig zout.",
+        "description": "Instellingen voor {model}. Een kleine afstand betekent veel zout, een grote afstand betekent weinig zout.\n\nHuidige meting: **{current_measurement}**",
         "data": {
           "full_distance": "Afstand bij volle tank",
           "empty_distance": "Afstand bij lege tank",

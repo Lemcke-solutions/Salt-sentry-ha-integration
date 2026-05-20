@@ -16,7 +16,7 @@
       },
       "distances": {
         "title": "Set distances",
-        "description": "Settings for {model}. A small distance means a full tank (a lot of salt), a large distance means an empty tank.",
+        "description": "Settings for {model}. A small distance means a full tank (a lot of salt), a large distance means an empty tank.\n\nCurrent measurement: **{current_measurement}**",
         "data": {
           "full_distance": "Distance when tank is full",
           "empty_distance": "Distance when tank is empty",
@@ -53,7 +53,7 @@
       },
       "distances": {
         "title": "Adjust distances",
-        "description": "Settings for {model}. A small distance means a full tank, a large distance means an empty tank.",
+        "description": "Settings for {model}. A small distance means a full tank, a large distance means an empty tank.\n\nCurrent measurement: **{current_measurement}**",
         "data": {
           "full_distance": "Distance when tank is full",
           "empty_distance": "Distance when tank is empty",

@@ -16,7 +16,7 @@
       },
       "distances": {
         "title": "Définir les distances",
-        "description": "Paramètres pour {model}. Une petite distance signifie un réservoir plein (beaucoup de sel), une grande distance signifie un réservoir vide.",
+        "description": "Paramètres pour {model}. Une petite distance signifie un réservoir plein (beaucoup de sel), une grande distance signifie un réservoir vide.\n\nMesure actuelle : **{current_measurement}**",
         "data": {
           "full_distance": "Distance quand le réservoir est plein",
           "empty_distance": "Distance quand le réservoir est vide",
@@ -53,7 +53,7 @@
       },
       "distances": {
         "title": "Ajuster les distances",
-        "description": "Paramètres pour {model}. Une petite distance signifie un réservoir plein, une grande distance signifie un réservoir vide.",
+        "description": "Paramètres pour {model}. Une petite distance signifie un réservoir plein, une grande distance signifie un réservoir vide.\n\nMesure actuelle : **{current_measurement}**",
         "data": {
           "full_distance": "Distance quand le réservoir est plein",
           "empty_distance": "Distance quand le réservoir est vide",

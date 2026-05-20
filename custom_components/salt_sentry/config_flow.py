@@ -30,6 +30,8 @@ from .const import (
     cm_to_unit,
 )
 
+_MEASUREMENT_UNAVAILABLE = "unavailable"
+
 MANUFACTURER = "Lemcke Solutions"
 
 
@@ -114,6 +116,7 @@ class SaltSentryConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
         default_full: float = cm_to_unit(preset["full_cm"], self._unit) or 0.0
         default_empty: float = cm_to_unit(preset["empty_cm"], self._unit) or 0.0
+        current_measurement = await self._fetch_current_measurement(self._host, self._unit)
 
         if user_input is not None:
             full = float(user_input[CONF_FULL])
@@ -142,8 +145,20 @@ class SaltSentryConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 vol.Required(CONF_SCAN_INTERVAL, default=DEFAULT_SCAN_INTERVAL): vol.Coerce(int),
             }),
             errors=errors,
-            description_placeholders={"model": self._softeners[self._softener_type]["name"]},
+            description_placeholders={
+                "model": self._softeners[self._softener_type]["name"],
+                "current_measurement": current_measurement,
+            },
         )
+
+    async def _fetch_current_measurement(self, host: str, unit: str) -> str:
+        """Return the current sensor measurement as a formatted string."""
+        try:
+            status = await SaltSentryDevice(host, async_get_clientsession(self.hass)).get_status()
+            value = cm_to_unit(status.measurement_cm, unit) or status.measurement_cm
+            return f"{value} {unit}"
+        except SaltSentryError:
+            return _MEASUREMENT_UNAVAILABLE
 
     async def async_step_reconfigure(
         self, user_input: dict[str, Any] | None = None
@@ -222,6 +237,8 @@ class SaltSentryOptionsFlow(config_entries.OptionsFlow):
 
         default_full: float = current.get(CONF_FULL) or cm_to_unit(preset["full_cm"], self._unit) or 0.0
         default_empty: float = current.get(CONF_EMPTY) or cm_to_unit(preset["empty_cm"], self._unit) or 0.0
+        host: str = self._config_entry.data[CONF_HOST]
+        current_measurement = await self._fetch_current_measurement(host, self._unit)
 
         if user_input is not None:
             full = float(user_input[CONF_FULL])
@@ -247,5 +264,17 @@ class SaltSentryOptionsFlow(config_entries.OptionsFlow):
                 vol.Required(CONF_SCAN_INTERVAL, default=current.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL)): vol.Coerce(int),
             }),
             errors=errors,
-            description_placeholders={"model": softeners[self._softener_type]["name"]},
+            description_placeholders={
+                "model": softeners[self._softener_type]["name"],
+                "current_measurement": current_measurement,
+            },
         )
+
+    async def _fetch_current_measurement(self, host: str, unit: str) -> str:
+        """Return the current sensor measurement as a formatted string."""
+        try:
+            status = await SaltSentryDevice(host, async_get_clientsession(self.hass)).get_status()
+            value = cm_to_unit(status.measurement_cm, unit) or status.measurement_cm
+            return f"{value} {unit}"
+        except SaltSentryError:
+            return _MEASUREMENT_UNAVAILABLE
