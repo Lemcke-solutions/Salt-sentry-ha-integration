@@ -23,8 +23,8 @@ _LOGGER = logging.getLogger(__name__)
 PARALLEL_UPDATES = 0
 
 GITHUB_RELEASES_URL: dict[str, str] = {
-    "A": "https://api.github.com/repos/Lemcke-solutions/saltSentryFirmware/releases/latest",
-    "B": "https://api.github.com/repos/Lemcke-solutions/saltSentryFirmware_rev2/releases/latest",
+    "A": "https://api.github.com/repos/Lemcke-solutions/salt-sentry-firmware-hwa/releases/latest",
+    "B": "https://api.github.com/repos/Lemcke-solutions/salt-sentry-firmware-hwb/releases/latest",
 }
 GITHUB_CHECK_INTERVAL = timedelta(hours=6)
 
