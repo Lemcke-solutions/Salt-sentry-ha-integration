@@ -1,6 +1,6 @@
 # Salt Sentry — Home Assistant Integration
 
-Integrates the **Salt Sentry** device into Home Assistant. The Salt Sentry is an ultrasonic distance sensor that measures the salt level in a water softener and exposes it as a measurement and percentage via a local HTTP API.
+Integrates the **Salt Sentry** device into Home Assistant. The Salt Sentry is a devices that uses a time-of-flight distance sensor to measure the salt level in a water softener and exposes it as a measurement and percentage via a local HTTP API.
 
 The Salt Sentry device is available on [Tindie](https://www.tindie.com/products/ErikLemcke/salt-sentry-water-softener-monitor/).
 
