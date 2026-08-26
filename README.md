@@ -64,6 +64,10 @@ If you've found good settings for a device not yet listed, please let me know, s
 | Model | Distance full | Distance empty |
 |-------|--------------|----------------|
 | Aqua Cell | 5 cm | 35 cm |
+| BWT WS | 8 cm | 42 cm |
+| Culligan H-8 | 6 cm | 38 cm |
+| Harvey MiniMax | 7 cm | 40 cm |
+| Kinetico B3 | 5 cm | 36 cm |
 | Other | manual | manual |
 
 ## Automation examples
