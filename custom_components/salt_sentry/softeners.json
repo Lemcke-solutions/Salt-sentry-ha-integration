@@ -4,6 +4,26 @@
     "full_cm": 5,
     "empty_cm": 35
   },
+  "bwt_ws": {
+    "name": "BWT WS",
+    "full_cm": 8,
+    "empty_cm": 42
+  },
+  "culligan_h8": {
+    "name": "Culligan H-8",
+    "full_cm": 6,
+    "empty_cm": 38
+  },
+  "harvey_minimax": {
+    "name": "Harvey MiniMax",
+    "full_cm": 7,
+    "empty_cm": 40
+  },
+  "kinetico_b3": {
+    "name": "Kinetico B3",
+    "full_cm": 5,
+    "empty_cm": 36
+  },
   "other": {
     "name": "Other",
     "full_cm": null,
