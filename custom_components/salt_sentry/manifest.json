@@ -9,7 +9,7 @@
   "iot_class": "local_polling",
   "issue_tracker": "https://github.com/Lemcke-solutions/Salt-sentry-ha-integration/issues",
   "requirements": ["pysaltsentry==0.1.2"],
-  "version": "1.0.2",
+  "version": "1.0.3",
   "zeroconf": [
     {
       "type": "_salt_sentry._tcp.local.",
