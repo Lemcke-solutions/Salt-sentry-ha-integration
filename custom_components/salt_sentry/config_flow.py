@@ -142,7 +142,9 @@ class SaltSentryConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             data_schema=vol.Schema({
                 vol.Required(CONF_FULL, default=default_full): vol.Coerce(float),
                 vol.Required(CONF_EMPTY, default=default_empty): vol.Coerce(float),
-                vol.Required(CONF_SCAN_INTERVAL, default=DEFAULT_SCAN_INTERVAL): vol.Coerce(int),
+                vol.Required(CONF_SCAN_INTERVAL, default=DEFAULT_SCAN_INTERVAL): vol.All(
+                    vol.Coerce(int), vol.Range(min=1)
+                ),
             }),
             errors=errors,
             description_placeholders={
@@ -261,7 +263,9 @@ class SaltSentryOptionsFlow(config_entries.OptionsFlow):
             data_schema=vol.Schema({
                 vol.Required(CONF_FULL, default=default_full): vol.Coerce(float),
                 vol.Required(CONF_EMPTY, default=default_empty): vol.Coerce(float),
-                vol.Required(CONF_SCAN_INTERVAL, default=current.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL)): vol.Coerce(int),
+                vol.Required(CONF_SCAN_INTERVAL, default=current.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL)): vol.All(
+                    vol.Coerce(int), vol.Range(min=1)
+                ),
             }),
             errors=errors,
             description_placeholders={
