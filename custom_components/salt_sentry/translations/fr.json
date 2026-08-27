@@ -57,7 +57,8 @@
         "data": {
           "full_distance": "Distance quand le réservoir est plein",
           "empty_distance": "Distance quand le réservoir est vide",
-          "scan_interval": "Intervalle de mise à jour (minutes)"
+          "scan_interval": "Intervalle de mise à jour (minutes)",
+          "correction": "Correction de mesure"
         }
       }
     }

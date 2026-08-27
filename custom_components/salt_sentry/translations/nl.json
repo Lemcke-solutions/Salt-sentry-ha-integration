@@ -57,7 +57,8 @@
         "data": {
           "full_distance": "Afstand bij volle tank",
           "empty_distance": "Afstand bij lege tank",
-          "scan_interval": "Update-interval (minuten)"
+          "scan_interval": "Update-interval (minuten)",
+          "correction": "Meetcorrectie"
         }
       }
     }

@@ -22,6 +22,7 @@ from .const import (
     CONF_HOST,
     CONF_SCAN_INTERVAL,
     CONF_UNIT,
+    DEFAULT_CORRECTION,
     DEFAULT_SCAN_INTERVAL,
     DOMAIN,
     UNIT_CM,
@@ -239,6 +240,7 @@ class SaltSentryOptionsFlow(config_entries.OptionsFlow):
 
         default_full: float = current.get(CONF_FULL) or cm_to_unit(preset["full_cm"], self._unit) or 0.0
         default_empty: float = current.get(CONF_EMPTY) or cm_to_unit(preset["empty_cm"], self._unit) or 0.0
+        default_correction: float = current.get(CONF_CORRECTION, DEFAULT_CORRECTION)
         host: str = self._config_entry.data[CONF_HOST]
         current_measurement = await self._fetch_current_measurement(host, self._unit)
 
@@ -256,6 +258,7 @@ class SaltSentryOptionsFlow(config_entries.OptionsFlow):
                     CONF_FULL: full,
                     CONF_EMPTY: empty,
                     CONF_SCAN_INTERVAL: user_input[CONF_SCAN_INTERVAL],
+                    CONF_CORRECTION: float(user_input[CONF_CORRECTION]),
                 })
 
         return self.async_show_form(
@@ -266,6 +269,7 @@ class SaltSentryOptionsFlow(config_entries.OptionsFlow):
                 vol.Required(CONF_SCAN_INTERVAL, default=current.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL)): vol.All(
                     vol.Coerce(int), vol.Range(min=1)
                 ),
+                vol.Optional(CONF_CORRECTION, default=default_correction): vol.Coerce(float),
             }),
             errors=errors,
             description_placeholders={

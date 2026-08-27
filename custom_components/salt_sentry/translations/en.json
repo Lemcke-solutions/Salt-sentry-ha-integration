@@ -57,7 +57,8 @@
         "data": {
           "full_distance": "Distance when tank is full",
           "empty_distance": "Distance when tank is empty",
-          "scan_interval": "Update interval (minutes)"
+          "scan_interval": "Update interval (minutes)",
+          "correction": "Measurement correction"
         }
       }
     }
