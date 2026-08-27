@@ -53,7 +53,7 @@
       },
       "distances": {
         "title": "Adjust distances",
-        "description": "Settings for {model}. A small distance means a full tank, a large distance means an empty tank.\n\nCurrent measurement: **{current_measurement}**",
+        "description": "Settings for {model}. A small distance means a full tank, a large distance means an empty tank.\n\nCurrent measurement: **{current_measurement}**\n\nIf the measurement doesn't match reality, for example due to the sensor's mounting position, use the correction value to compensate.",
         "data": {
           "full_distance": "Distance when tank is full",
           "empty_distance": "Distance when tank is empty",

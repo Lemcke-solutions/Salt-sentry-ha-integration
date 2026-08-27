@@ -53,7 +53,7 @@
       },
       "distances": {
         "title": "Abstände anpassen",
-        "description": "Einstellungen für {model}. Ein kleiner Abstand bedeutet einen vollen Behälter, ein großer Abstand bedeutet einen leeren Behälter.\n\nAktuelle Messung: **{current_measurement}**",
+        "description": "Einstellungen für {model}. Ein kleiner Abstand bedeutet einen vollen Behälter, ein großer Abstand bedeutet einen leeren Behälter.\n\nAktuelle Messung: **{current_measurement}**\n\nWenn die Messung nicht der Realität entspricht, z. B. aufgrund der Montageposition des Sensors, verwenden Sie den Korrekturwert, um dies auszugleichen.",
         "data": {
           "full_distance": "Abstand bei vollem Behälter",
           "empty_distance": "Abstand bei leerem Behälter",

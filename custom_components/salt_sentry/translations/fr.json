@@ -53,7 +53,7 @@
       },
       "distances": {
         "title": "Ajuster les distances",
-        "description": "Paramètres pour {model}. Une petite distance signifie un réservoir plein, une grande distance signifie un réservoir vide.\n\nMesure actuelle : **{current_measurement}**",
+        "description": "Paramètres pour {model}. Une petite distance signifie un réservoir plein, une grande distance signifie un réservoir vide.\n\nMesure actuelle : **{current_measurement}**\n\nSi la mesure ne correspond pas à la réalité, par exemple en raison de la position de montage du capteur, utilisez la valeur de correction pour compenser.",
         "data": {
           "full_distance": "Distance quand le réservoir est plein",
           "empty_distance": "Distance quand le réservoir est vide",

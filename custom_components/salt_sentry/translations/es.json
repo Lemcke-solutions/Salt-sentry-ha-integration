@@ -53,7 +53,7 @@
       },
       "distances": {
         "title": "Ajustar distancias",
-        "description": "Configuración para {model}. Una distancia pequeña significa un depósito lleno, una distancia grande significa un depósito vacío.\n\nMedición actual: **{current_measurement}**",
+        "description": "Configuración para {model}. Una distancia pequeña significa un depósito lleno, una distancia grande significa un depósito vacío.\n\nMedición actual: **{current_measurement}**\n\nSi la medición no coincide con la realidad, por ejemplo debido a la posición de montaje del sensor, utilice el valor de corrección para compensarlo.",
         "data": {
           "full_distance": "Distancia cuando el depósito está lleno",
           "empty_distance": "Distancia cuando el depósito está vacío",

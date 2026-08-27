@@ -53,7 +53,7 @@
       },
       "distances": {
         "title": "Afstanden aanpassen",
-        "description": "Instellingen voor {model}. Een kleine afstand betekent veel zout, een grote afstand betekent weinig zout.\n\nHuidige meting: **{current_measurement}**",
+        "description": "Instellingen voor {model}. Een kleine afstand betekent veel zout, een grote afstand betekent weinig zout.\n\nHuidige meting: **{current_measurement}**\n\nAls de meting niet overeenkomt met de werkelijkheid, bijvoorbeeld door de montagepositie van de sensor, gebruik dan de correctiewaarde om dit te compenseren.",
         "data": {
           "full_distance": "Afstand bij volle tank",
           "empty_distance": "Afstand bij lege tank",
