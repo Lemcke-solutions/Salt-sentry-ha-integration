@@ -48,6 +48,39 @@ async def test_user_flow_success(hass):
         assert result["data"]["host"] == "192.168.1.100"
 
 
+async def test_user_flow_out_of_range_measurement(hass):
+    """A reachable device reporting an out-of-range measurement can still be added."""
+    out_of_range_status = SaltSentryStatus(
+        unique_id="e4f61f",
+        measurement_cm=None,
+        firmware_version="1.2.3",
+        hardware_revision="A",
+    )
+    with patch("custom_components.salt_sentry.config_flow.SaltSentryDevice") as mock_cls, \
+         patch("custom_components.salt_sentry.config_flow.async_load_softeners", return_value={
+             "other": {"name": "Other", "full_cm": None, "empty_cm": None}
+         }):
+        mock_cls.return_value.get_status = AsyncMock(return_value=out_of_range_status)
+
+        result = await hass.config_entries.flow.async_init(
+            DOMAIN, context={"source": config_entries.SOURCE_USER}
+        )
+        result = await hass.config_entries.flow.async_configure(
+            result["flow_id"],
+            user_input={"host": "192.168.1.100", "unit": "cm", "softener_type": "other"},
+        )
+        assert result["type"] == FlowResultType.FORM
+        assert result["step_id"] == "distances"
+        assert result["description_placeholders"]["current_measurement"] == "unavailable"
+
+        result = await hass.config_entries.flow.async_configure(
+            result["flow_id"],
+            user_input={"full_distance": 10.0, "empty_distance": 50.0, "scan_interval": 1},
+        )
+        assert result["type"] == FlowResultType.CREATE_ENTRY
+        assert result["data"]["host"] == "192.168.1.100"
+
+
 async def test_user_flow_cannot_connect(hass):
     with patch("custom_components.salt_sentry.config_flow.SaltSentryDevice") as mock_cls, \
          patch("custom_components.salt_sentry.config_flow.async_load_softeners", return_value={

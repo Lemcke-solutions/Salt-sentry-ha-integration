@@ -158,10 +158,11 @@ class SaltSentryConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         """Return the current sensor measurement as a formatted string."""
         try:
             status = await SaltSentryDevice(host, async_get_clientsession(self.hass)).get_status()
-            value = cm_to_unit(status.measurement_cm, unit) or status.measurement_cm
-            return f"{value} {unit}"
         except SaltSentryError:
             return _MEASUREMENT_UNAVAILABLE
+        if status.measurement_cm is None:
+            return _MEASUREMENT_UNAVAILABLE
+        return f"{cm_to_unit(status.measurement_cm, unit)} {unit}"
 
     async def async_step_reconfigure(
         self, user_input: dict[str, Any] | None = None
@@ -282,7 +283,8 @@ class SaltSentryOptionsFlow(config_entries.OptionsFlow):
         """Return the current sensor measurement as a formatted string."""
         try:
             status = await SaltSentryDevice(host, async_get_clientsession(self.hass)).get_status()
-            value = cm_to_unit(status.measurement_cm, unit) or status.measurement_cm
-            return f"{value} {unit}"
         except SaltSentryError:
             return _MEASUREMENT_UNAVAILABLE
+        if status.measurement_cm is None:
+            return _MEASUREMENT_UNAVAILABLE
+        return f"{cm_to_unit(status.measurement_cm, unit)} {unit}"

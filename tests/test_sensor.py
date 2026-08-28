@@ -56,6 +56,10 @@ class TestSaltPercentageSensor:
         sensor = make_sensor(SaltPercentageSensor, measurement_cm=10.0, config_overrides={CONF_EMPTY: 10.0})
         assert sensor.native_value == 0
 
+    def test_out_of_range_measurement_returns_none(self):
+        sensor = make_sensor(SaltPercentageSensor, measurement_cm=None)
+        assert sensor.native_value is None
+
 
 class TestSaltDistanceSensor:
     def test_no_correction(self):
@@ -84,6 +88,10 @@ class TestSaltDistanceSensor:
         # 25.4cm + 2.54cm = 27.94cm → 11.0 inch
         assert sensor.native_value == pytest.approx(11.0, abs=0.01)
 
+    def test_out_of_range_measurement_returns_none(self):
+        sensor = make_sensor(SaltDistanceSensor, measurement_cm=None, config_overrides={CONF_CORRECTION: 5.0})
+        assert sensor.native_value is None
+
 
 class TestSaltRawDistanceSensor:
     def test_returns_raw_measurement(self):
@@ -93,3 +101,7 @@ class TestSaltRawDistanceSensor:
     def test_disabled_by_default(self):
         sensor = make_sensor(SaltRawDistanceSensor, measurement_cm=30.0)
         assert sensor.entity_registry_enabled_default is False
+
+    def test_out_of_range_measurement_returns_none(self):
+        sensor = make_sensor(SaltRawDistanceSensor, measurement_cm=None)
+        assert sensor.native_value is None

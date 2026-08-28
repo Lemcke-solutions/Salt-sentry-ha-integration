@@ -128,6 +128,9 @@ automation:
 **Entity shows unavailable**
 - The device could not be reached during the last poll. Check power and network connectivity. HA will automatically recover when the device is reachable again.
 
+**Distance and salt level show unknown while the device is reachable**
+- The device is reporting an out-of-range or invalid measurement (for example, the tank lid is open or the sensor has nothing to measure against). The values recover automatically once the device reports a valid reading again.
+
 ## Device API
 
 The Salt Sentry device exposes a local HTTP API at `http://<device-ip>/status`. No cloud connection is required.

@@ -52,13 +52,19 @@ class SaltSentryBaseSensor(CoordinatorEntity[SaltSentryCoordinator], SensorEntit
             return correction * 2.54
         return correction
 
-    def _raw_measurement_cm(self) -> float:
-        """Return the raw distance measurement in centimeters."""
-        return cast(float, self.coordinator.data["measurement"])
+    def _raw_measurement_cm(self) -> float | None:
+        """Return the raw distance measurement in centimeters, or None if unavailable."""
+        return cast("float | None", self.coordinator.data["measurement"])
 
-    def _corrected_measurement_cm(self) -> float:
-        """Return the corrected distance measurement in centimeters, clamped to zero."""
-        return max(0.0, self._raw_measurement_cm() + self._get_correction_cm())
+    def _corrected_measurement_cm(self) -> float | None:
+        """Return the corrected distance measurement in centimeters, clamped to zero.
+
+        Returns None when the device reported no valid measurement.
+        """
+        raw = self._raw_measurement_cm()
+        if raw is None:
+            return None
+        return max(0.0, raw + self._get_correction_cm())
 
     def _to_display_unit(self, value_cm: float) -> float:
         """Convert a centimeter value to the configured display unit."""

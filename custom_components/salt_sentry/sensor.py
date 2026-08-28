@@ -31,9 +31,12 @@ class SaltRawDistanceSensor(SaltSentryBaseSensor):
         self._attr_unique_id = f"{coordinator.data['unique_id']}_raw_distance"
 
     @property
-    def native_value(self) -> float:
-        """Return the raw distance in the configured unit."""
-        return self._to_display_unit(self._raw_measurement_cm())
+    def native_value(self) -> float | None:
+        """Return the raw distance in the configured unit, or None if unavailable."""
+        measurement = self._raw_measurement_cm()
+        if measurement is None:
+            return None
+        return self._to_display_unit(measurement)
 
 
 class SaltDistanceSensor(SaltSentryBaseSensor):
@@ -50,9 +53,12 @@ class SaltDistanceSensor(SaltSentryBaseSensor):
         self._attr_unique_id = f"{coordinator.data['unique_id']}_distance"
 
     @property
-    def native_value(self) -> float:
-        """Return the corrected distance in the configured unit."""
-        return self._to_display_unit(self._corrected_measurement_cm())
+    def native_value(self) -> float | None:
+        """Return the corrected distance in the configured unit, or None if unavailable."""
+        measurement = self._corrected_measurement_cm()
+        if measurement is None:
+            return None
+        return self._to_display_unit(measurement)
 
 
 class SaltPercentageSensor(SaltSentryBaseSensor):
@@ -72,9 +78,11 @@ class SaltPercentageSensor(SaltSentryBaseSensor):
         return "%"
 
     @property
-    def native_value(self) -> float:
-        """Return the salt level as a percentage between 0 and 100."""
+    def native_value(self) -> float | None:
+        """Return the salt level as a percentage between 0 and 100, or None if unavailable."""
         measurement = self._corrected_measurement_cm()
+        if measurement is None:
+            return None
         config = self._get_config()
         full: float = config[CONF_FULL]
         empty: float = config[CONF_EMPTY]
