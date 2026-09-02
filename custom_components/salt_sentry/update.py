@@ -60,6 +60,11 @@ class SaltSentryUpdateEntity(CoordinatorEntity[SaltSentryCoordinator], UpdateEnt
         self._download_url: str | None = None
 
     @property
+    def suggested_object_id(self) -> str | None:
+        """Keep entity IDs in English regardless of the configured HA language."""
+        return self.translation_key
+
+    @property
     def device_info(self) -> DeviceInfo:
         """Return device information."""
         return DeviceInfo(identifiers={(DOMAIN, self.coordinator.data["unique_id"])})

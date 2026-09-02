@@ -23,6 +23,11 @@ class SaltSentryBaseSensor(CoordinatorEntity[SaltSentryCoordinator], SensorEntit
         self.entry = entry
 
     @property
+    def suggested_object_id(self) -> str | None:
+        """Keep entity IDs in English regardless of the configured HA language."""
+        return self.translation_key
+
+    @property
     def device_info(self) -> DeviceInfo:
         """Return device information."""
         device_id: str = cast(str, self.coordinator.data["unique_id"])
