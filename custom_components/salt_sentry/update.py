@@ -108,7 +108,9 @@ class SaltSentryUpdateEntity(CoordinatorEntity[SaltSentryCoordinator], UpdateEnt
                 self._release_notes = data.get("body")
                 for asset in data.get("assets", []):
                     if asset["name"].endswith(".bin"):
-                        self._download_url = asset["browser_download_url"]
+                        # The asset API URL avoids browser_download_url's ~9 KB
+                        # Content-Security-Policy header, which exceeds aiohttp's limit.
+                        self._download_url = asset["url"]
                         break
                 self.async_write_ha_state()
         except Exception as err:
@@ -126,7 +128,9 @@ class SaltSentryUpdateEntity(CoordinatorEntity[SaltSentryCoordinator], UpdateEnt
         host: str = config[CONF_HOST]
         session = async_get_clientsession(self.hass)
 
-        async with session.get(self._download_url) as resp:
+        async with session.get(
+            self._download_url, headers={"Accept": "application/octet-stream"}
+        ) as resp:
             resp.raise_for_status()
             firmware_data = await resp.read()
 

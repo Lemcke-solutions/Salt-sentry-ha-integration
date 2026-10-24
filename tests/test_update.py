@@ -25,7 +25,13 @@ ENTRY_DATA = {
 GITHUB_RELEASE = {
     "tag_name": "v1.3.0",
     "body": "Bug fixes",
-    "assets": [{"name": "firmware.bin", "browser_download_url": "http://example.com/firmware.bin"}],
+    "assets": [
+        {
+            "name": "firmware.bin",
+            "url": "https://api.github.com/repos/example/firmware/releases/assets/1",
+            "browser_download_url": "http://example.com/firmware.bin",
+        }
+    ],
 }
 
 
@@ -96,6 +102,10 @@ async def test_update_entity_install(hass):
             blocking=True,
         )
 
+        mock_session.get.assert_any_call(
+            "https://api.github.com/repos/example/firmware/releases/assets/1",
+            headers={"Accept": "application/octet-stream"},
+        )
         mock_device_cls.return_value.install_firmware.assert_called_once_with(b"firmware_bytes")
 
 
