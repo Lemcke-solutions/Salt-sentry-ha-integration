@@ -60,6 +60,24 @@ class TestSaltPercentageSensor:
         sensor = make_sensor(SaltPercentageSensor, measurement_cm=None)
         assert sensor.native_value is None
 
+    def test_inch_calibration(self):
+        # 41.5cm = 16.34 inch → (32 - 16.34) / (32 - 6) = 60.2%
+        sensor = make_sensor(
+            SaltPercentageSensor,
+            measurement_cm=41.5,
+            config_overrides={CONF_UNIT: UNIT_INCH, CONF_FULL: 6.0, CONF_EMPTY: 32.0},
+        )
+        assert sensor.native_value == 60.2
+
+    def test_inch_correction_converted(self):
+        # 38.1cm + 1 inch correction = 16 inch → (32 - 16) / (32 - 6) = 61.5%
+        sensor = make_sensor(
+            SaltPercentageSensor,
+            measurement_cm=38.1,
+            config_overrides={CONF_UNIT: UNIT_INCH, CONF_FULL: 6.0, CONF_EMPTY: 32.0, CONF_CORRECTION: 1.0},
+        )
+        assert sensor.native_value == 61.5
+
 
 class TestSaltDistanceSensor:
     def test_no_correction(self):

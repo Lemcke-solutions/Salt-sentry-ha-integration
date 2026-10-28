@@ -8,7 +8,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity import EntityCategory  # type: ignore[attr-defined]
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
-from .const import CONF_EMPTY, CONF_FULL
+from .const import CONF_EMPTY, CONF_FULL, UNIT_INCH
 from .coordinator import SaltSentryConfigEntry, SaltSentryCoordinator
 from .entity import SaltSentryBaseSensor
 
@@ -88,6 +88,9 @@ class SaltPercentageSensor(SaltSentryBaseSensor):
         empty: float = config[CONF_EMPTY]
         if empty == full:
             return 0.0
+        # Full/empty are stored in the configured unit, the measurement in cm.
+        if self._get_unit() == UNIT_INCH:
+            measurement /= 2.54
         percentage = (empty - measurement) / (empty - full) * 100
         return max(0.0, min(100.0, round(percentage, 1)))
 
